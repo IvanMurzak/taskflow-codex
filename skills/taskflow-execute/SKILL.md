@@ -11,7 +11,7 @@ owner GO required before dispatching work.
 
 ## Preconditions and state
 
-- Default root: `.claude/taskflow/`; use one `<slug>/` folder. Honor a supplied
+- Default root: `.taskflow/`; use one `YYYY-MM-DD-<slug>/` folder. Honor a supplied
   slug, resolve ambiguity with the owner, and never read or fall back to
   legacy workflow artifacts.
 - Stop unless the frame is locked/reviewed, `tasks/` is populated, and ROADMAP

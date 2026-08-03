@@ -1,7 +1,7 @@
 ---
 name: "taskflow-frame"
 description: "Frame a system or feature change from verified repository evidence and owner decisions, then write a self-contained Taskflow architecture set and ROADMAP. Use for structural features and architectural changes."
-argument-hint: "<what to frame> [taskflow slug — writes .claude/taskflow/<slug>]"
+argument-hint: "<what to frame> [taskflow slug — writes .taskflow/YYYY-MM-DD-<slug>]"
 ---
 
 # Taskflow frame
@@ -11,16 +11,19 @@ establishes the durable architecture frame; it does not begin implementation.
 
 ## Artifact contract
 
-- Create exactly one `.claude/taskflow/<kebab-slug>/` folder per taskflow. A
-  caller may select the slug but cannot redirect artifacts outside
-  `.claude/taskflow/`. If the folder exists, read it before extending it.
+- Create exactly one `.taskflow/YYYY-MM-DD-<kebab-slug>/` folder per taskflow.
+  Prefix the caller-selected kebab-case slug with the local calendar date on
+  which the folder is created; do not rename existing folders. A caller may
+  select the slug but cannot redirect artifacts outside `.taskflow/`. If the
+  folder exists, read it before extending it.
 - Legacy workflow artifacts are archives: do not read, migrate, or use them as
   fallback.
 
 ## Frame from evidence
 
-1. Resolve the slug and report the intended folder. Extract the problem and ask
-   2–4 owner questions that materially change the result. Product decisions—
+1. Resolve the kebab-case slug, prefix it with today's local date as
+   `YYYY-MM-DD-<slug>`, and report the intended folder. Extract the problem and
+   ask 2–4 owner questions that materially change the result. Product decisions—
    deployment target, compatibility, identity, UX, monetization, scope, and
    irreversible behavior—belong to the owner. Offer a safe recommendation
    first, then record the confirmed answer.

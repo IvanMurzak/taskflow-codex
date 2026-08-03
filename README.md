@@ -15,7 +15,8 @@ This self-contained Codex package has its manifest at
 
 ## Workflow contract
 
-- New artifacts live only in `.claude/taskflow/<slug>/`.
+- New artifacts live only in `.taskflow/YYYY-MM-DD-<slug>/`. Prefix every new
+  Taskflow folder with its local creation date; do not rename existing folders.
 - `ROADMAP.md` is the sole mutable task-state record. Task specs are immutable
   and never contain `status`.
 - Task groups run sequentially by `sequence`; independent groups may run in
@@ -24,7 +25,8 @@ This self-contained Codex package has its manifest at
 - Production, money, secrets, irreversible effects, and product decisions
   require an explicit owner gate.
 
-Legacy `.claude/design/` folders are archives and are not read or migrated.
+Legacy `.claude/design/` and `.claude/taskflow/` folders are archives and are
+not read or migrated.
 
 ## License
 

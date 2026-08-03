@@ -1,7 +1,7 @@
 ---
 name: "taskflow-tasks"
 description: "Decompose a reviewed Taskflow folder into immutable implementation-ready task specifications, conflict-safe groups, dependencies, model tiers, and ROADMAP execution waves."
-argument-hint: "[<taskflow slug> — default: the single taskflow under .claude/taskflow/]"
+argument-hint: "[<taskflow slug> — default: the single YYYY-MM-DD-<slug> folder under .taskflow/]"
 ---
 
 # Taskflow tasks
@@ -11,7 +11,7 @@ unresolved product question.
 
 ## Location and outputs
 
-- Default root: `.claude/taskflow/`; use one `<slug>/` folder. Honor a supplied
+- Default root: `.taskflow/`; use one `YYYY-MM-DD-<slug>/` folder. Honor a supplied
   slug and resolve ambiguity with the owner. Never use legacy workflow
   artifacts.
 - Write `<slug>/tasks/README.md` with the coefficient legend, model rubric,

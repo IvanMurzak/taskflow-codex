@@ -1,7 +1,7 @@
 ---
 name: "taskflow-review"
 description: "Adversarially verify a Taskflow folder against repository code, authoritative external specifications, and internal consistency, then apply confirmed non-product corrections in one batch."
-argument-hint: "[<taskflow slug> — default: the single taskflow under .claude/taskflow/]"
+argument-hint: "[<taskflow slug> — default: the single YYYY-MM-DD-<slug> folder under .taskflow/]"
 ---
 
 # Taskflow review
@@ -11,7 +11,7 @@ verifies rather than summarizes.
 
 ## Select and read artifacts
 
-- Default root: `.claude/taskflow/`; select one `<slug>/` folder. Honor a
+- Default root: `.taskflow/`; select one `YYYY-MM-DD-<slug>/` folder. Honor a
   supplied slug; if more than one folder could apply, ask the owner.
 - Read the complete folder: README, ROADMAP, numbered documents, and `tasks/`
   when present. Never use legacy workflow artifacts as input or fallback.
