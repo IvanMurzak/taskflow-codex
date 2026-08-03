@@ -1,0 +1,33 @@
+skills/taskflow-tasks/SKILL.md
+  s_f5e65a594ec2d4::t_bdcbc00ea59d4b 9-10,75-77
+skills/taskflow-execute/SKILL.md
+  s_f5e65a594ec2d4::t_bdcbc00ea59d4b 9-10
+.github/workflows/validate.yml
+  s_f5e65a594ec2d4::t_309d507d97e6f0 1-21
+.github/workflows/release.yml
+  s_f5e65a594ec2d4::t_309d507d97e6f0 1-47
+README.md
+  s_f5e65a594ec2d4::t_bdcbc00ea59d4b 3
+skills/taskflow-review/SKILL.md
+  s_f5e65a594ec2d4::t_bdcbc00ea59d4b 9-10,54-55
+skills/taskflow-frame/SKILL.md
+  s_f5e65a594ec2d4::t_bdcbc00ea59d4b 9-10
+scripts/validate_plugin.py
+  s_f5e65a594ec2d4::t_896189110ae53e 1-629
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "c0c80adfb99786d840fc09e51f00c3f61da3b949",
+  "prompts": {},
+  "sessions": {
+    "s_f5e65a594ec2d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fc66c-df58-72e0-a9df-8a2531918de0",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
