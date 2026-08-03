@@ -6,8 +6,8 @@ argument-hint: "[<taskflow slug> — default: the single taskflow under .claude/
 
 # Taskflow tasks
 
-Use this skill only when the owner explicitly asks to specify work for a locked,
-reviewed taskflow with no unresolved product question.
+Any user or agent may invoke this skill for a locked, reviewed taskflow with no
+unresolved product question.
 
 ## Location and outputs
 
@@ -72,5 +72,6 @@ money, secrets, and irreversible effects.
   End an artifact-producing group with an integration/publish gate that
   downstream groups depend on.
 
-Update the taskflow README, commit only this taskflow folder when appropriate,
-and wait for an explicit owner GO before `taskflow-execute`.
+Update the taskflow README and commit only this taskflow folder when
+appropriate. Any user or agent may invoke `taskflow-execute`; it must still
+obtain the explicit owner GO required before dispatch.
