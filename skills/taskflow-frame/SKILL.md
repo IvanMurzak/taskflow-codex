@@ -6,9 +6,8 @@ argument-hint: "<what to frame> [taskflow slug — writes .claude/taskflow/<slug
 
 # Taskflow frame
 
-Use this skill only when the owner explicitly asks to start the Taskflow
-lifecycle. It establishes the durable architecture frame; it does not begin
-implementation.
+Any user or agent may invoke this skill to start the Taskflow lifecycle. It
+establishes the durable architecture frame; it does not begin implementation.
 
 ## Artifact contract
 

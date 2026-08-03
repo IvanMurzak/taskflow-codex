@@ -6,8 +6,8 @@ argument-hint: "[<taskflow slug> — default: the single taskflow under .claude/
 
 # Taskflow review
 
-Use this skill only when the owner explicitly asks to review an existing
-taskflow. It verifies rather than summarizes.
+Any user or agent may invoke this skill to review an existing taskflow. It
+verifies rather than summarizes.
 
 ## Select and read artifacts
 
@@ -51,5 +51,5 @@ taskflow. It verifies rather than summarizes.
 - The execution plan uses available forge/CI capabilities or, if absent,
   isolated worktrees with local repository evidence.
 
-The next stage is `taskflow-tasks`, and it is owner-invoked rather than
-automatic.
+The next stage is `taskflow-tasks`; a user or agent may invoke it when the
+review is complete.

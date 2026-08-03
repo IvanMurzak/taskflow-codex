@@ -6,7 +6,8 @@ argument-hint: "[<taskflow slug>] [scope: wave, group, or task subset — defaul
 
 # Taskflow execute
 
-Use this skill only after the owner explicitly authorizes execution.
+Any user or agent may invoke this skill. It must still obtain the explicit
+owner GO required before dispatching work.
 
 ## Preconditions and state
 
