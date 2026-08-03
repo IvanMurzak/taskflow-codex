@@ -1,0 +1,39 @@
+.claude-plugin/plugin.json
+  s_3c149407cdd5d4::t_5ffa056e016f71 3-4
+CLAUDE.md
+  s_3c149407cdd5d4::t_c65d631d0f504f 7-10,27-29
+README.md
+  s_3c149407cdd5d4::t_48a12667ad3ee9 7-10,12,34-37
+skills/design-implement/SKILL.md
+  s_38060a3b4e0e82::t_31c44f652e0dac 2,4,8,24,83
+skills/design-review/SKILL.md
+  s_38060a3b4e0e82::t_786bbbb08f12b8 2,4,8
+skills/design-system/SKILL.md
+  s_38060a3b4e0e82::t_655d67e3882d25 2,4,8,78,81,110-112
+skills/design-tasks/SKILL.md
+  s_38060a3b4e0e82::t_d04f355a88def4 2,4,8,21,72,119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "413326ab910881588360e5138549005a9a7ef768",
+  "prompts": {},
+  "sessions": {
+    "s_38060a3b4e0e82": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "edda8706-b868-417a-afa5-049b33a40e21",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    },
+    "s_3c149407cdd5d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "845aef5f-a4aa-4844-b9e6-479df3530c09",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}

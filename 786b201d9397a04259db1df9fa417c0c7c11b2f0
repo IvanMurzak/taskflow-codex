@@ -1,0 +1,25 @@
+.claude-plugin/plugin.json
+  s_fd1da21005d998::t_877e81cbdecbfd 3
+CLAUDE.md
+  s_fd1da21005d998::t_1061fb4f46a599 21-26
+README.md
+  s_fd1da21005d998::t_a920edad25a5df 17-20
+skills/design-implement/SKILL.md
+  s_fd1da21005d998::t_187d304fefa4ab 9-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "786b201d9397a04259db1df9fa417c0c7c11b2f0",
+  "prompts": {},
+  "sessions": {
+    "s_fd1da21005d998": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b2fe96f-b5ad-4eea-873f-b1d57e2af984",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}

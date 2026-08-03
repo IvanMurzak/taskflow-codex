@@ -1,0 +1,31 @@
+.claude-plugin/plugin.json
+  s_3c149407cdd5d4::t_9d0cc4163bb1e0 1-19
+CLAUDE.md
+  s_3c149407cdd5d4::t_a36595dc0949d5 1-34
+README.md
+  s_3c149407cdd5d4::t_094148b97164aa 1-49
+skills/implement/SKILL.md
+  s_3c149407cdd5d4::t_bcd03ae2c0f207 1-92
+skills/review/SKILL.md
+  s_3c149407cdd5d4::t_b9365376235238 1-80
+skills/system/SKILL.md
+  s_3c149407cdd5d4::t_17075f8a69eb24 1-111
+skills/tasks/SKILL.md
+  s_3c149407cdd5d4::t_7ebf2e3cf237af 1-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "3d95a7f8d1331a29e4f19b729d1c11fb48f1a8fe",
+  "prompts": {},
+  "sessions": {
+    "s_3c149407cdd5d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "845aef5f-a4aa-4844-b9e6-479df3530c09",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+skills/taskflow-tasks/SKILL.md
+  s_1147f1ddf7efed::t_a1e797e5ff2bb2 3-5,8,10,12-14,18-19,21,23-25,27,31-42,45,47,49,51-59,61,64-99
+  s_5292f63d8e83c9::t_25dca1644df3d5 2
+skills/taskflow-execute/SKILL.md
+  s_1147f1ddf7efed::t_a1e797e5ff2bb2 3-5,8-70
+  s_5292f63d8e83c9::t_24fd88f96ec581 2
+skills/taskflow-frame/SKILL.md
+  s_1147f1ddf7efed::t_a1e797e5ff2bb2 3-5,8,10,12-14,16-17,21-29,33-79
+  s_5292f63d8e83c9::t_75071ecd35eb0c 2
+skills/taskflow-review/SKILL.md
+  s_1147f1ddf7efed::t_a1e797e5ff2bb2 3-5,8,10,12-16,20-21,25-64
+  s_5292f63d8e83c9::t_1b794cc5288025 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "dea0f68a803174fd511823dcf08bba5077a405ea",
+  "prompts": {},
+  "sessions": {
+    "s_1147f1ddf7efed": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fc633-d097-7c91-af8f-7791314a43eb",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    },
+    "s_5292f63d8e83c9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d3a0d21-6d64-43ad-9722-911ea60169ce",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
