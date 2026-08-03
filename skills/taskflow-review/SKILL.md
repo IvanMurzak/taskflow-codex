@@ -1,64 +1,55 @@
 ---
 name: "taskflow-review"
-description: "Adversarially verify an existing Taskflow folder against repository code, authoritative external specifications, and internal consistency; then apply confirmed non-product corrections in one coherent batch."
+description: "Adversarially verify a Taskflow folder against repository code, authoritative external specifications, and internal consistency, then apply confirmed non-product corrections in one batch."
 argument-hint: "[<taskflow slug> — default: the single taskflow under .claude/taskflow/]"
-disable-model-invocation: true
 ---
 
-# taskflow-review — adversarial verification
+# Taskflow review
 
-## Select the taskflow
+Use this skill only when the owner explicitly asks to review an existing
+taskflow. It verifies rather than summarizes.
 
-- Default root: `.claude/taskflow/`; review one `<slug>/` sub-folder.
-- Honor a supplied slug. If the root has exactly one sub-folder, use it;
-  otherwise ask the owner to select one. Confirm the resolved folder before work.
-- Read the whole folder—README, ROADMAP, numbered documents, and `tasks/` if it
-  exists. Never use legacy workflow artifacts as input or fallback.
+## Select and read artifacts
 
-## Principle
+- Default root: `.claude/taskflow/`; select one `<slug>/` folder. Honor a
+  supplied slug; if more than one folder could apply, ask the owner.
+- Read the complete folder: README, ROADMAP, numbered documents, and `tasks/`
+  when present. Never use legacy workflow artifacts as input or fallback.
 
-Reviewers try to disprove the taskflow. Apply a finding only after verifying it
-against evidence; plausible but false corrections are harmful.
+## Adversarial process
 
-## Process
+1. Independently investigate three areas, using available repository search,
+   web research, and delegation where useful:
 
-1. Run three independent reviews in parallel.
+   - **Repository truth:** verify factual and feasibility claims against source
+     with `file:line` evidence, including byte-level and cross-language parity.
+   - **External conformance:** consult current authoritative standards, protocol
+     specifications, vendor behavior, and SDK source. Cite MUST/SHOULD issues.
+   - **Consistency and completeness:** test decisions, requirements,
+     dependencies, migration, gates, threat coverage, UX budgets, stale text,
+     and ROADMAP/task-spec state ownership against one another.
 
-   - **Repository truth:** check every factual claim against source with
-     `file:line` evidence, including feasibility and cross-language/byte-level
-     parity claims. Report findings and a separate verified-correct inventory.
-   - **External conformance:** use available current research to check
-     authoritative specifications, standards, vendor behavior, and relevant
-     SDK source. Classify MUST/SHOULD deviations with citations.
-   - **Internal consistency:** check cross-document decisions, owner-requirement
-     traceability, migration and ROADMAP alignment, real dependency edges,
-     threat coverage, UX budgets, stale text, and the rule that ROADMAP is the
-     sole task-state record.
+   Classify P0 (broken guarantee/material falsehood), P1 (gap/risk), and P2
+   (wording/stale text). Each investigation also lists what it verified sound.
+2. Wait for all investigations, deduplicate their evidence, and correct only
+   confirmed factual or mechanical issues in one coherent batch.
+3. Never override an owner product decision. For deployment, compatibility,
+   identity, UX, monetization, scope, production effects, money, secrets, or
+   irreversibility, present evidence and a safe recommendation, obtain the
+   owner decision, then write `REVISED` with date and rationale in the ledger.
+4. Sweep the entire taskflow folder for every replaced term, parameter, number,
+   and path. Update README status and ROADMAP's progress log, then commit only
+   the taskflow folder when a commit is appropriate.
 
-   Use P0 for broken guarantees/material falsehoods, P1 for gaps or risks, and
-   P2 for wording or stale content.
-2. Wait for every review, consolidate duplicate findings, and verify the
-   proposed correction. Apply factual and mechanical corrections together.
-3. If evidence affects a product decision—deployment, compatibility, identity,
-   UX, monetization, scope, production behavior, money, secrets, or an
-   irreversible action—do not choose for the owner. Present evidence and a safe
-   recommended option, then record the confirmed choice as `REVISED` with date
-   and rationale in the decision ledger.
-4. Edit all affected documents in one coherent batch. Sweep the taskflow folder
-   for every replaced term, parameter, number, and storage location. Update the
-   README status and ROADMAP progress log.
-5. Make a surgical taskflow-folder commit. Report decision revisions first,
-   then confirmed corrections, then the verified-correct inventory.
+## Required checks
 
-## Review checks
+- `ROADMAP.md` is the only mutable task-state record and its executing
+  orchestrator is its only writer after evidence verification.
+- Specs never contain `status`; they contain `sequence`,
+  `security_critical`, and `production_touching` when tasks exist.
+- Waves, dependency edges, migration phases, and gates agree.
+- The execution plan uses available forge/CI capabilities or, if absent,
+  isolated worktrees with local repository evidence.
 
-- `ROADMAP.md` has the only task status board and only the executing
-  orchestrator edits it after repository/CI evidence.
-- Task specs have no `status`; when present they include `sequence`,
-  `security_critical`, and `production_touching`.
-- Timeline, gates, dependencies, migration, and task specs agree.
-- The workflow uses available forge/CI tooling where present and a local,
-  isolated-worktree evidence path where it is absent.
-
-Do not start decomposition automatically; the next manual stage is
-`/taskflow-tasks`.
+The next stage is `taskflow-tasks`, and it is owner-invoked rather than
+automatic.

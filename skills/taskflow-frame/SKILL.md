@@ -1,79 +1,61 @@
 ---
 name: "taskflow-frame"
-description: "Frame a system or feature change from verified repository evidence and owner decisions, then write a self-contained Taskflow architecture set and ROADMAP. Use before a structural feature or architectural change, not for a one-off bug fix."
+description: "Frame a system or feature change from verified repository evidence and owner decisions, then write a self-contained Taskflow architecture set and ROADMAP. Use for structural features and architectural changes."
 argument-hint: "<what to frame> [taskflow slug — writes .claude/taskflow/<slug>]"
-disable-model-invocation: true
 ---
 
-# taskflow-frame — establish the architecture frame
+# Taskflow frame
 
-## Artifact location
+Use this skill only when the owner explicitly asks to start the Taskflow
+lifecycle. It establishes the durable architecture frame; it does not begin
+implementation.
 
-- Create and use exactly one `.claude/taskflow/<kebab-slug>/` folder for this
-  taskflow. A caller may provide the slug but cannot redirect artifacts outside
-  `.claude/taskflow/`. If the folder exists, read it before extending it; never
-  clobber it.
-- Do not read, migrate, or fall back to legacy workflow artifacts. They are
-  archival and outside this workflow.
+## Artifact contract
 
-## Non-negotiables
+- Create exactly one `.claude/taskflow/<kebab-slug>/` folder per taskflow. A
+  caller may select the slug but cannot redirect artifacts outside
+  `.claude/taskflow/`. If the folder exists, read it before extending it.
+- Legacy workflow artifacts are archives: do not read, migrate, or use them as
+  fallback.
 
-1. **Evidence first.** Every factual statement about existing code must have a
-   `file:line` reference found in this session.
-2. **Owner decides product policy; you decide mechanisms.** Ask about only
-   choices that change the outcome: deployment target, compatibility, identity,
-   UX golden path, monetization, scope, or irreversible behavior. Offer a safe
-   recommended option first and record every answer.
-3. **Artifacts are the deliverable.** Write the taskflow folder and make a
-   surgical commit limited to it; do not modify unrelated files in a shared
-   checkout.
+## Frame from evidence
 
-## Process
+1. Resolve the slug and report the intended folder. Extract the problem and ask
+   2–4 owner questions that materially change the result. Product decisions—
+   deployment target, compatibility, identity, UX, monetization, scope, and
+   irreversible behavior—belong to the owner. Offer a safe recommendation
+   first, then record the confirmed answer.
+2. Use available filesystem search and delegated investigation to explore each
+   affected repository or subsystem. Every factual code claim must cite the
+   source as `file:line` found in this session. Capture existing behavior,
+   concrete change seams, risks, and unanswered assumptions.
+3. Write a self-contained artifact set in `<slug>/`:
 
-1. Resolve `<slug>` and state the path. Extract the problem; ask 2–4 focused
-   owner questions while beginning exploration.
-2. Explore each affected repository or subsystem independently. Require exact
-   files, line numbers, existing behavior, change seams, risks, and a concise
-   evidence summary. Add exploration when an owner answer exposes another seam.
-3. Write this minimum set in `<slug>/`:
-
-   | File | Required content |
+   | File | Content |
    |---|---|
-   | `README.md` | Status, problem, locked decisions table, summary, document map, glossary. |
-   | `ROADMAP.md` | This taskflow's implementation ledger: status, timeline/waves, gates, status board skeleton, and progress log. |
-   | `01-current-architecture.md` | Evidence-only current behavior, edge cases, and seam index with `file:line` references. |
-   | `02-target-architecture.md` | Principles, models/roles, decisions ledger D1..Dn, trade-offs, and owner-facing open questions. |
-   | `03-*.md` | End-to-end actor flows, including failure, expiry, and offline paths where relevant. |
+   | `README.md` | Status, problem, locked decisions, summary, document map, glossary. |
+   | `ROADMAP.md` | Implementation ledger: status, waves, gates, board skeleton, progress log. |
+   | `01-current-architecture.md` | Evidence-only behavior, edge cases, and seam index. |
+   | `02-target-architecture.md` | Principles, roles/models, D1..Dn decision ledger, trade-offs, open questions. |
+   | `03-*.md` | Actor flows including failure, expiry, and offline paths where relevant. |
    | `04-*.md` | Subsystem rules, data structures, precedence, and test approach. |
-   | `05-infrastructure.md` | Deployment/secrets delta and rollback, when applicable. |
-   | `06-migration-rollout.md` | Phases, dependencies, gates, legacy disposition, risks, and rollback. |
-   | `07-security.md` | Credential inventory, threat-to-control table, handling rules, and security gates. |
-   | `08-user-workflows.md` | Persona journeys with counted step/click budgets as release gates. |
+   | `05-infrastructure.md` | Deployment/secrets delta and rollback when applicable. |
+   | `06-migration-rollout.md` | Phases, dependencies, gates, legacy disposition, risks, rollback. |
+   | `07-security.md` | Credential inventory, threat-to-control table, handling, security gates. |
+   | `08-user-workflows.md` | Persona journeys with counted UX budgets as release gates. |
 
-4. Put this banner in `ROADMAP.md`: it is this taskflow's implementation ledger,
-   not a workspace-wide product roadmap. Include design status, implementation
-   status, last-updated date, execution timeline, human-approval gates, progress
-   log, and the board schema:
+4. Put in `ROADMAP.md` a clear banner that it is this taskflow's implementation
+   ledger, not a workspace-wide roadmap. Include status, last update, timeline,
+   human gates, progress log, and this board skeleton:
 
    ```text
    | Task (spec) | needs | imp/cx | model | Status | Run / PR | Updated |
    ```
 
-   At this stage the board may be a skeleton. It becomes populated only in
-   `/taskflow-tasks`. The board is the only task-state record; the executing
-   orchestrator alone later updates it after verification.
-5. Record every owner answer as D1, D2, and so on in both the README table and
-   target-architecture ledger. Amendments are `REVISED` with date and reason,
-   never silent rewrites.
-6. On later refinements, update the relevant artifacts, sweep for stale terms,
-   append the decision history, and commit only the taskflow folder.
+   The board is the sole task-state record. It may remain empty until
+   `taskflow-tasks`; only `taskflow-execute` later changes it after verification.
+5. Record each owner answer as a dated D1, D2, and so on in both the README and
+   target ledger. Mark amendments `REVISED` with a date and rationale.
 
-## Quality bar
-
-- Every requirement maps to a mechanism, and every mechanism to a requirement.
-- Migration has dependencies, gates, rollback, and user impact.
-- New mechanisms appear in the threat table; journeys have honest counted UX
-  budgets.
-- No unresolved placeholder lacks a specific owner question.
-
-When stable, direct the owner to `/taskflow-review`, then `/taskflow-tasks`.
+Commit only the taskflow folder when a commit is appropriate. When the frame is
+stable, the next owner-invoked stage is `taskflow-review`.

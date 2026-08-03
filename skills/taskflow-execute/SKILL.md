@@ -1,70 +1,53 @@
 ---
 name: "taskflow-execute"
-description: "Orchestrate execution of a completed Taskflow from its ROADMAP status board: compute ready tasks, dispatch within dependency and conflict limits, verify repository and CI evidence, and update the board as its sole writer."
+description: "Orchestrate a completed Taskflow from its ROADMAP status board: compute ready tasks, dispatch within dependency and conflict limits, verify repository and CI evidence, and update the board as its sole writer."
 argument-hint: "[<taskflow slug>] [scope: wave, group, or task subset — default: whole board]"
-disable-model-invocation: true
 ---
 
-# taskflow-execute — ROADMAP-driven orchestration
+# Taskflow execute
 
-## Select and validate the taskflow
+Use this skill only after the owner explicitly authorizes execution.
 
-- Default root: `.claude/taskflow/`; operate in one `<slug>/` folder. Honor a
-  supplied slug; resolve ambiguity with the owner. Never use legacy
-  workflow artifacts as input or fallback.
-- Stop unless the frame is locked and reviewed, `tasks/` is populated, and
-  ROADMAP has a status board. Direct the owner to `/taskflow-tasks` if needed.
-- Before dispatching, reconcile every non-pending board row with repository
-  evidence. Prefer available forge/CI integrations; otherwise inspect branches,
-  commits, merged revisions, test evidence, and executor locks.
+## Preconditions and state
 
-## State and ownership contract
+- Default root: `.claude/taskflow/`; use one `<slug>/` folder. Honor a supplied
+  slug, resolve ambiguity with the owner, and never read or fall back to
+  legacy workflow artifacts.
+- Stop unless the frame is locked/reviewed, `tasks/` is populated, and ROADMAP
+  has a status board. Reconcile all non-pending rows against available
+  forge/CI evidence; if unavailable, inspect branches, commits, merged
+  revisions, test evidence, and executor locks.
+- ROADMAP is the only mutable task-state record. This orchestrator is its sole
+  writer. Implementers do not edit ROADMAP or immutable specs. Commit each
+  board change surgically with a progress-log entry where applicable.
+- If a workspace planning system exists, maintain one thin pointer to ROADMAP,
+  never a mirrored per-task state store.
 
-- ROADMAP's board is the only mutable task-state record. You are its sole
-  writer; implementers never edit ROADMAP or immutable task specs.
-- Change a row only after evidence of dispatch, review, merge, and/or passing
-  CI supports that state. Make every board update a surgical `ROADMAP.md`
-  commit with a progress-log entry where appropriate.
-- If a workspace planning store exists, ensure it has just one thin pointer to
-  this ROADMAP. Do not duplicate per-task state.
+## Orchestration loop
 
-## Dispatch rules
+1. Honor an owner scope or resolve the whole board. The ready set is pending
+   rows with completed `needs` and cleared gates. Run a conflict group strictly
+   by `sequence`; run only independent groups in parallel.
+2. For production, money, secrets, or irreversible effects, request a distinct
+   owner GO via the available input mechanism. Offer a safe recommendation
+   first and log the confirmed decision before dispatch.
+3. Check existing branches, reviews, runs, and locks to avoid duplicate work.
+   Use the project's normal execution and forge/CI facilities where available.
+   Otherwise give one isolated worktree worker each immutable task spec—Goal,
+   Scope & seams, DoD, and taskflow references—and never permission to edit
+   ROADMAP.
+4. Record dispatch as `🔵 running` with a run reference/date and commit. Track
+   with available forge/CI evidence or local branch/commit/test/review evidence;
+   do not busy-wait.
+5. Record an opened review as `🟣 review`. Merge only with repository-policy and
+   explicit owner authorization. Verify every DoD item before recording `✅`
+   with a change reference/date and a progress entry, then recompute readiness.
+6. On failure record `⛔` with a concise reason; retry, rescope, or escalate
+   rather than silently continuing. At each wave boundary report landed,
+   running, blocked work, risks, and resource concerns.
 
-1. Honor an owner-requested scope; otherwise resolve the whole board. Work is
-   sequential within a conflict group by `sequence` and parallel only across
-   independent groups, subject to owner concurrency limits.
-2. The ready set is pending rows whose `needs` are completed and whose approval
-   gates are cleared. For production, money, secrets, or irreversible effects,
-   request a distinct owner GO through the available input mechanism; present a
-   safe option first and record the decision before dispatch.
-3. Check for existing branches, changes, reviews, runs, or locks for the same
-   task before dispatching. Reconcile rather than collide.
-4. Use the consumer project's execution workflow and its approved mapping for
-   the board's `top`/`mid`/`fast` tier when available. Otherwise dispatch one
-   isolated worktree worker per task. Give the worker only its immutable spec
-   (Goal, Scope & seams, DoD, and taskflow references), never permission to
-   edit ROADMAP.
-
-## Loop
-
-1. Dispatch a ready task and change `⬜ pending` to `🔵 running`, recording run
-   reference and date; commit ROADMAP.
-2. Track via the available forge/CI evidence. If tooling is unavailable, use
-   local branch, commit, test, and review evidence; do not busy-wait.
-3. On an opened review, record `🟣 review`. Merge only when repository policy
-   and explicit owner authorization permit it. Verify cleanup only after the
-   merge result is known.
-4. Verify every DoD item. On success record `✅`, the verified change reference,
-   date, and a progress-log line; commit and recompute the ready set. On failure
-   record `⛔` with a concise reason, then retry, rescope, or escalate—never
-   silently continue.
-5. At each wave boundary report landed/running/blocked work, risk, and any
-   resource concerns; audit worktrees and branches before the next wave.
-
-## Finish and anti-patterns
-
-When all scoped rows are complete, update the taskflow README status and
-ROADMAP counter, remove any thin pointer created for this taskflow, commit, and
-report verified results and gates. Do not mark work complete from a worker
-report alone, run same-group tasks concurrently, edit task specs, implement
-inline, or leave board changes uncommitted.
+When all scoped rows are verified complete, update the taskflow README and
+ROADMAP counter, remove a temporary thin pointer if one was created, commit, and
+report results and gates. Do not accept a worker report as completion evidence,
+run same-group tasks concurrently, edit specs, implement inline, or leave board
+updates uncommitted.

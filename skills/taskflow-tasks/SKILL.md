@@ -1,99 +1,76 @@
 ---
 name: "taskflow-tasks"
-description: "Decompose a reviewed Taskflow folder into immutable implementation-ready task specifications, conflict-safe execution groups, dependencies, routing tiers, and ROADMAP waves."
+description: "Decompose a reviewed Taskflow folder into immutable implementation-ready task specifications, conflict-safe groups, dependencies, model tiers, and ROADMAP execution waves."
 argument-hint: "[<taskflow slug> — default: the single taskflow under .claude/taskflow/]"
-disable-model-invocation: true
 ---
 
-# taskflow-tasks — immutable specifications and execution waves
+# Taskflow tasks
 
-## Select the taskflow
+Use this skill only when the owner explicitly asks to specify work for a locked,
+reviewed taskflow with no unresolved product question.
 
-- Default root: `.claude/taskflow/`; work in one `<slug>/` folder.
-- Honor a supplied slug; use the only sub-folder when unambiguous,
-  otherwise ask the owner. Do not inspect or migrate legacy workflow artifacts.
+## Location and outputs
 
-## Precondition
+- Default root: `.claude/taskflow/`; use one `<slug>/` folder. Honor a supplied
+  slug and resolve ambiguity with the owner. Never use legacy workflow
+  artifacts.
+- Write `<slug>/tasks/README.md` with the coefficient legend, model rubric,
+  group table, and a pointer to `../ROADMAP.md`.
+- Write one immutable `<slug>/tasks/<id>-<slug>.md` per PR-able task:
 
-The frame is locked, reviewed, and has no unresolved product question or
-unapplied finding. Stop and surface either condition rather than guess.
+  ```markdown
+  ---
+  id: "b3-pairing-plane"
+  title: "One-line task title"
+  group: "B"
+  sequence: 3
+  repo: "repo-or-submodule-path"
+  depends_on: ["a2-library-gate"]
+  importance: 1
+  complexity: 1
+  security_critical: false
+  production_touching: false
+  model_hint: "fast"
+  taskflow_refs: ["02-target-architecture.md", "04-protocol.md"]
+  ---
 
-## Outputs
+  ## Goal
+  ## Scope & seams
+  ## Definition of Done
+  ```
 
-Create `<slug>/tasks/README.md` with the coefficient legend, model rubric,
-group table, and a pointer to `../ROADMAP.md`. The ROADMAP owns live waves and
-state; these files own static specifications.
+`sequence` increases strictly within its group. Never include `status`: specs
+are immutable and all live task state belongs solely to `ROADMAP.md`.
 
-Create one immutable file per task: `<slug>/tasks/<id>-<slug>.md`.
+## ROADMAP update
 
-```markdown
----
-id: "b3-pairing-plane"
-title: "One-line task title"
-group: "B"
-sequence: 3
-repo: "repo-or-submodule-path"
-depends_on: ["a2-library-gate"]
-importance: 1
-complexity: 1
-security_critical: false
-production_touching: false
-model_hint: "fast"
-taskflow_refs: ["02-target-architecture.md", "04-protocol.md"]
----
-
-## Goal
-
-## Scope & seams
-
-## Definition of Done
-```
-
-`sequence` is strictly increasing within its group. **Never add `status`.**
-Task files are immutable; all live state exists only in `ROADMAP.md`.
-
-## Update ROADMAP.md
-
-Populate execution waves and one row per task:
+Populate execution waves and its single status board:
 
 ```text
 | Task (spec) | needs | imp/cx | model | Status | Run / PR | Updated |
 | [b3-pairing-plane](tasks/b3-pairing-plane.md) | a2 | 9/7 | top | ⬜ pending | | |
 ```
 
-Record these rules beside the board:
+State explicitly that the board is the only task-state record, that the ready
+set is computed from `needs` and completed rows, and that only
+`taskflow-execute` updates board rows/progress after evidence verification. A
+workspace planning facility gets at most one thin pointer to this ROADMAP;
+never duplicate every task's state. Add explicit owner gates for production,
+money, secrets, and irreversible effects.
 
-1. The board is the only mutable task-state record; the ready set is computed
-   from `needs` plus completed rows, never stored separately.
-2. Only `/taskflow-execute` changes board rows or the progress log after
-   ground-truth verification; implementers report but do not edit specs or the
-   board.
-3. A workspace-wide planning system, if one exists, gets one thin pointer to
-   this ROADMAP, never a duplicate record per task.
+## Routing and safe parallelism
 
-Add human approval gates for production, money, secrets, and irreversible
-effects. Update the taskflow README to say tasks were specified and make a
-surgical commit limited to the taskflow folder.
-
-## Coefficients and routing
-
-- **Importance (1–10):** consequence of an incorrect or missing task; use it
-  to order otherwise-ready work and communicate risk.
-- **Complexity (1–10):** architectural depth, cross-cutting surface, risk, and
-  correctness cliffs.
-- Complexity ≥8 → `top`; 5–7 → `mid`; ≤4 → `fast`. Either
+- Importance measures impact of a missing/incorrect task. Complexity measures
+  depth, surface, risk, and correctness cliffs.
+- Complexity ≥8 maps to `top`, 5–7 to `mid`, and ≤4 to `fast`.
   `security_critical` or `production_touching` raises one tier, with `top`
-  remaining `top`. Tiers map to consumer-project-approved models.
+  remaining top. These are consumer-project-approved model tiers, not pinned
+  model names.
+- A group is one merge-conflict domain. Run one group strictly by ascending
+  `sequence`; if overlap is uncertain, keep the tasks in one group.
+- Independent groups may run in parallel only when `depends_on` permits it.
+  End an artifact-producing group with an integration/publish gate that
+  downstream groups depend on.
 
-## Ownership and parallelism
-
-1. A group is one merge-conflict domain. Execute its tasks strictly in ascending
-   `sequence`. If file overlap is uncertain, put both tasks in the same group.
-2. Different groups may run in parallel only when `depends_on` allows it;
-   separate repositories are separate groups by default.
-3. Express cross-group ordering with `depends_on`. End artifact-producing groups
-   with an explicit integration/publish gate for downstream consumers.
-4. Draw the resulting waves in ROADMAP. One task should be one reviewable,
-   PR-able unit; split oversized work and merge trivial same-file work.
-
-Execution begins only after an explicit owner GO via `/taskflow-execute`.
+Update the taskflow README, commit only this taskflow folder when appropriate,
+and wait for an explicit owner GO before `taskflow-execute`.
