@@ -1,0 +1,19 @@
+docs/2026-08-09-codex-subagent-isolation.md
+  s_9b6d237351e36c::t_9e56c881d71a48 1-351
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "f12f42293c8b1f9f2df80b4573a445abaa546230",
+  "prompts": {},
+  "sessions": {
+    "s_9b6d237351e36c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_9b6d237351e36c",
+        "model": "unknown"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
