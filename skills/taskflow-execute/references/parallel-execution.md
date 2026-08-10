@@ -259,10 +259,18 @@ So, before the first dispatch of a `toolkit` run:
   should be writable alongside the primary workspace"*, present on
   `codex-cli 0.147.0`. It is a **session-start** setting: it cannot be added to a
   session already running.
-- **If it is not, the run cannot dispatch into CLI slots.** Report that, name the
-  slot root `pipeline worktree create` reported in `worktree_path`, and treat the
-  round exactly as §2 treats a missing substrate: withhold, state the reason once,
-  and do not route around it by leaving workers in the shared checkout.
+- **The slot root is knowable before the first `create`, and it has to be.**
+  `--add-dir` must be passed when the session starts, which is *before* any
+  `worktree_path` has been reported — so reading the root off a created slot is
+  too late to be useful. The CLI names it as `PIPELINE_WT_ROOT`, *"where slots
+  live; default `C:/tmp` on Windows, else the system temp dir."* Read that
+  variable, or its documented default, when composing the session. Confirming it
+  afterwards against the first `worktree_path` is worth doing; it is a check, not
+  the source.
+- **If it is not a workspace root, the run cannot dispatch into CLI slots.**
+  Report that, name the root, and treat the round exactly as §2 treats a missing
+  substrate: withhold, state the reason once, and do not route around it by
+  leaving workers in the shared checkout.
 - **Do not widen the sandbox to `danger-full-access` to make this go away.** That
   removes the one boundary this host does enforce, and it is not the boundary
   that was in the way.
@@ -1073,6 +1081,7 @@ either.
 | `gh api repos/…/branches/…/protection`, `gh api repos/…/rulesets`, `gh pr merge` | GitHub CLI |
 | `spawn_agent`, `wait_agent`, `followup_task`, `send_message`, `interrupt_agent`, `list_agents` | the Codex host — direct tool calls, never from inside a shell call (`SKILL.md` §10.2) |
 | `codex exec --add-dir <DIR>` | the Codex host — a **session-start** setting, named here because §3.1.1 depends on it and because a run cannot apply it to itself |
+| `PIPELINE_WT_ROOT` | not a command — the environment variable naming the slot root, read when composing the session (§3.1.1) |
 
 **Named only to forbid them:** `--force` on slot creation (the CLI exposes none
 on any `worktree` verb), `git worktree add` in **any** form as a substitute for
