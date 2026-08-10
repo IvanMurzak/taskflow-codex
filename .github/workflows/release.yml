@@ -20,8 +20,8 @@ jobs:
     name: Codex plugin validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Install validator dependency
@@ -33,7 +33,7 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # `--target` is load-bearing. Without it `gh` creates the tag on the
       # repository's DEFAULT branch (`main`), while this plugin develops on
       # `next` — so a release dispatched from `next` would tag `main`'s tree,
