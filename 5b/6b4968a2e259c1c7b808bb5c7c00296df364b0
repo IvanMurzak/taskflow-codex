@@ -1,0 +1,19 @@
+skills/taskflow-execute/references/parallel-execution.md
+  s_3046ebfd2aaa07::t_ae73513d143193 262-273
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5b6b4968a2e259c1c7b808bb5c7c00296df364b0",
+  "prompts": {},
+  "sessions": {
+    "s_3046ebfd2aaa07": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019feaa2-6de5-74a0-ab9e-6918a7b58ecd",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
