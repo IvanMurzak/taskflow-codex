@@ -755,7 +755,7 @@ that neither half drifts into claiming the other's mechanisms.
   sentinel is meaningless without injection** and porting it here would be
   ceremony around a command nobody injected. The *facts* that block gathers are
   gathered here as §2's instructions, which is the whole of the port.
-- **`disable-model-invocation: true` must never appear.** The plugin validator
+- **`disable-model-invocation` must never be set true.** The plugin validator
   rejects it (`.github/scripts/validate_plugin.py`), and it would make this skill
   unreachable to the model that is supposed to run it. The frontmatter this file
   needs is exactly `name` and `description`.
