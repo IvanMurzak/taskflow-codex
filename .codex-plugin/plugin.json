@@ -5,7 +5,7 @@
   "author": {
     "name": "IvanMurzak"
   },
-  "repository": "https://github.com/IvanMurzak/Claude-Strategy",
+  "repository": "https://github.com/IvanMurzak/taskflow-codex",
   "license": "MIT",
   "keywords": [
     "taskflow",
@@ -24,7 +24,7 @@
     "developerName": "IvanMurzak",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
-    "websiteURL": "https://github.com/IvanMurzak/Claude-Strategy",
+    "websiteURL": "https://github.com/IvanMurzak/taskflow-codex",
     "defaultPrompt": [
       "Use taskflow-frame to frame this architectural change.",
       "Review the selected Taskflow artifacts for evidence and consistency.",
