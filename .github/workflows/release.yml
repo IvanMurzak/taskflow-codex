@@ -34,6 +34,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # `--target` is load-bearing. Without it `gh` creates the tag on the
+      # repository's DEFAULT branch (`main`), while this plugin develops on
+      # `next` — so a release dispatched from `next` would tag `main`'s tree,
+      # publish the wrong content, and still go green. That happened for real:
+      # at the 0.6.0 releases `main` still carried version 0.5.1 and a dead
+      # repository URL, and both releases only escaped because the operator
+      # pre-created the tag ref by hand first.
+      #
+      # $GITHUB_SHA, not a branch name: it is the exact commit this dispatch
+      # ran against, so it cannot drift if someone pushes to `next` between the
+      # validate job and this step — and it is the same commit `validate`
+      # checked out, which makes "what was validated" and "what is published"
+      # the same object by construction.
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -41,7 +54,23 @@ jobs:
           RELEASE_TITLE: ${{ inputs.title }}
         run: |
           if [ -n "$RELEASE_TITLE" ]; then
-            gh release create "$RELEASE_TAG" --title "$RELEASE_TITLE" --generate-notes
+            gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" --title "$RELEASE_TITLE" --generate-notes
           else
-            gh release create "$RELEASE_TAG" --generate-notes
+            gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" --generate-notes
           fi
+
+      # `--target` is ignored when the tag ALREADY exists, so the flag alone
+      # cannot catch a tag pre-created at the wrong commit. This turns that
+      # silent-wrong-release into a red job, which is the failure mode this
+      # whole workflow keeps producing: green run, wrong artifact.
+      - name: Verify the tag points at the validated commit
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          git fetch --force origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+          ACTUAL="$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")"
+          if [ "$ACTUAL" != "$GITHUB_SHA" ]; then
+            echo "::error::tag $RELEASE_TAG points at $ACTUAL, but this run validated $GITHUB_SHA. The release does not contain what was tested."
+            exit 1
+          fi
+          echo "tag $RELEASE_TAG -> $ACTUAL (matches the validated commit)"
