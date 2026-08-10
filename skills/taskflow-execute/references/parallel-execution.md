@@ -770,6 +770,7 @@ Every response is defined, announced, and non-forcing. Exactly one halts the run
 | **Port allocation exhausted** | Withhold the task exactly as in §2.1, and state the range that was tried |
 | **Reviewer subagent fails** | Treat as a blocking finding for that round. A second failure escalates the row to `⛔` rather than merging unreviewed |
 | **Reviewer role missing or not discoverable** | **Do not substitute a generic agent type for it.** A `default` spawn carries neither the never-review-your-own-diff rule nor the never-implement rule, and once posted to the PR its output is indistinguishable from a contract review. Either inline `taskflow-reviewer`'s rules into the reviewer's own brief and say in the report that the role file was absent, or hold the row unreviewed and report why. **A failed review round is the better outcome than a review that silently dropped both guarantees.** The substitution was made once on the sibling host, and the result was posted to a real PR |
+| **A worker finishes its implementation but reports it could not commit, push, or open a PR** | **Observed, on the first real dispatch this contract was exercised by.** The work is in the slot and uncommitted, which is the state §12's precondition exists to protect. **Collect it — do not reap it, and do not re-dispatch.** The orchestrator commits the slot's contents itself, on the slot's own branch, and records in the run report that the worker did not reach its own commit step. Then fix the session: a worker that cannot write git is a worker whose rule 5 and rule 7 are unreachable, so the next round's session must be started with whatever approval or execpolicy setting the refusal named. Do **not** reach for `--dangerously-bypass-approvals-and-sandbox`; the refusal is a configuration answer, not an obstacle |
 | **Worker fails or times out** | `⛔` with the reason. **The slot is preserved** and its path recorded. `--on-fail=continue` keeps the other slots running; `--on-fail=stop` drains the in-flight slots and halts |
 | **Review still blocking after K rounds** | `⛔`. Slot preserved. (K and the loop are `references/code-review.md`'s) |
 | **CI red** | The row stays `🟣` with the failing check named. No merge |
@@ -849,6 +850,20 @@ names only the slots this run provisioned through `pipeline worktree create` —
 has no way to report a branch it did not cut. `git branch --list worktree-*` has
 no such filter. Where the two disagree about whether a branch is this run's,
 **the registry wins.**
+
+**A worker's output being uncommitted is more likely here than on the other
+host, so plan for it rather than treating it as an anomaly.** The Claude worker
+that leaves work uncommitted has usually been killed. Here there is a second and
+more ordinary cause: the session's own approval and execpolicy settings can
+refuse the git commands a worker needs, so a worker can finish its
+implementation, verify it, and still be unable to commit or push it. That was
+observed on the first real dispatch through `.codex/agents/taskflow-implementer.toml`
+— the implementation and its local verification were complete, and
+`git status --porcelain` in the slot showed one modified and one untracked file
+with `HEAD` still at the base commit. §10's table says what to do: collect it.
+The point for reconciliation is narrower and sharper — **on this host, "the
+branch carries no commits" is not even weak evidence of an idle worker**, and
+check [3] below is doing nearly all the work.
 
 **One resume hazard is specific to this host.** A session that ended mid-flight
 took its subagents with it, and those subagents were writing into CLI slots that
