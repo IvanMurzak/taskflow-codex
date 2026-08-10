@@ -1,0 +1,19 @@
+.codex-plugin/plugin.json
+  s_950819c609c047::t_d0dc85756a1799 8,27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ab576615222f05341c2290b8648deae92545579a",
+  "prompts": {},
+  "sessions": {
+    "s_950819c609c047": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_950819c609c047",
+        "model": "unknown"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
