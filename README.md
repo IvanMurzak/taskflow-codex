@@ -39,14 +39,21 @@ So the CLI is what supplies each concurrent worker a slot to work in. Without it
 `--parallel` is forced to `1`; the run says so once, naming the version it found
 and the minimum required, and every ready task still runs — one at a time.
 
-Optional, and separate from the CLI:
+<details>
+<summary><b>Optional — the Pipeline plugin, which is a different thing</b></summary>
+
+<br>
 
 ```bash
 codex plugin install pipeline@pipeline-codex
 ```
 
-The Pipeline plugin adds pipeline authoring — which is what
-`--engine=pipeline --pipeline=<name>` then hands each task to.
+The plugin adds pipeline authoring — which is what
+`--engine=pipeline --pipeline=<name>` then hands each task to. It is separate
+from the CLI above and does not substitute for it: the CLI is what provisions a
+worker's slot, and Taskflow resolves `pipeline` from `PATH`.
+
+</details>
 
 > **One extra copy, once per project.** `taskflow-execute` dispatches through two
 > agent roles that a Codex plugin manifest has no channel for shipping. Copy
