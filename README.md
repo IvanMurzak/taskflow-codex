@@ -63,27 +63,34 @@ worker's slot, and Taskflow resolves `pipeline` from `PATH`.
 > missing the run still works — with a generic agent type, the worker rules
 > inlined into each brief, and a line in the report saying so.
 
-## The four steps
+## How to use
 
-Pick a short name for your change. Every step uses that same name. Here it is
-`feature-abs`.
+![Four stages: plan, review, tasks, execute](docs/taskflow-steps.svg)
+
+Pick a short name for your change. Every step uses that same name.
 
 ### 1. Plan it
 
+Tell it the story the way you'd tell a colleague:
+
 ```text
-/taskflow-plan feature-abs
-description of the feature..., the whole story by a user....
+/taskflow-plan device-pairing
+
+People with two laptops sign in separately on each one and can't see which
+machines are already signed in. I want pairing: approve a new device from
+one you're already on, list the devices you have, and revoke any of them.
+Revoking should end that device's session and nothing else.
 ```
 
-Tell it the story the way you'd tell a colleague. It goes and reads your code —
+It goes and reads your code —
 every claim it writes down gets a `file:line` next to it — asks you the two or
 three questions that actually change the outcome, and writes the plan to
-`.taskflow/YYYY-MM-DD-feature-abs/`.
+`.taskflow/YYYY-MM-DD-device-pairing/`.
 
 ### 2. Review the plan
 
 ```text
-/taskflow-review feature-abs
+/taskflow-review device-pairing
 ```
 
 Three independent reviewers try to prove the plan wrong: against your code,
@@ -94,7 +101,7 @@ question.
 ### 3. Turn it into tasks
 
 ```text
-/taskflow-tasks feature-abs
+/taskflow-tasks device-pairing
 ```
 
 The plan becomes numbered, immutable task specs — grouped so that two tasks in
@@ -104,7 +111,7 @@ the same wave can never touch the same files — plus a status board in
 ### 4. Execute
 
 ```text
-/taskflow-execute feature-abs
+/taskflow-execute device-pairing
 ```
 
 > Best run in a **fresh context window**. It is a long job, and it does not need
@@ -119,13 +126,13 @@ Want it faster, and reviewed as it goes? This needs the
 which is what gives each concurrent worker a working directory of its own:
 
 ```text
-/taskflow-execute feature-abs --parallel=4 --review=high
+/taskflow-execute device-pairing --parallel=4 --review=high
 ```
 
 ## What lands on disk
 
 ```text
-.taskflow/2026-08-10-feature-abs/
+.taskflow/2026-08-10-device-pairing/
 ├── README.md                    the problem, and every decision you locked
 ├── ROADMAP.md                   the live status board — the only file that changes
 ├── 01-current-architecture.md   what your code does today, with file:line proof
