@@ -1,7 +1,7 @@
 {
   "name": "taskflow",
-  "version": "0.6.0",
-  "description": "A four-skill Taskflow lifecycle for architecture framing, adversarial verification, immutable task specifications, and ROADMAP-driven execution.",
+  "version": "0.7.0",
+  "description": "A four-skill Taskflow lifecycle for architecture planning, adversarial verification, immutable task specifications, and ROADMAP-driven execution.",
   "author": {
     "name": "IvanMurzak"
   },
@@ -19,14 +19,14 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Taskflow",
-    "shortDescription": "Frame, verify, specify, and orchestrate complex changes.",
-    "longDescription": "A repository-evidenced workflow that frames architecture, adversarially reviews it, writes immutable task specs, and executes from one ROADMAP status board.",
+    "shortDescription": "Plan, verify, specify, and orchestrate complex changes.",
+    "longDescription": "A repository-evidenced workflow that plans architecture, adversarially reviews it, writes immutable task specs, and executes from one ROADMAP status board.",
     "developerName": "IvanMurzak",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
     "websiteURL": "https://github.com/IvanMurzak/taskflow-codex",
     "defaultPrompt": [
-      "Use taskflow-frame to frame this architectural change.",
+      "Use taskflow-plan to plan this architectural change.",
       "Review the selected Taskflow artifacts for evidence and consistency.",
       "Prepare immutable tasks and execution waves for this Taskflow."
     ],

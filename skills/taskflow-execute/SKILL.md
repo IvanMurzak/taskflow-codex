@@ -154,9 +154,8 @@ anywhere else.
 ## 4. Select and validate the taskflow
 
 - Default root `.taskflow/`; operate inside one `YYYY-MM-DD-<slug>/` folder.
-  Honour a supplied slug and resolve ambiguity with the owner. Never take a
-  legacy workflow artifact as input or fallback.
-- Stop unless the frame is locked and reviewed, `tasks/` is populated, and
+  Honour a supplied slug and resolve ambiguity with the owner.
+- Stop unless the plan is locked and reviewed, `tasks/` is populated, and
   `ROADMAP.md` has a status board. Point the owner at `taskflow-tasks`.
 - **Before dispatching anything, reconcile every non-pending board row against
   repository evidence** — branches, commits, merged revisions, PRs, CI state,
@@ -283,7 +282,7 @@ would happen" in a tree that is not ready to run.
 **The gate.** With `--parallel > 1`, a **dirty main checkout stops the run**
 before any dispatch. Report the dirty paths. **Do not stash and do not clean** —
 the dirt may belong to another agent working in the same shared checkout, which
-is exactly what was found when this design was framed. `--dry-run` skips this
+is exactly what was found when this design was planned. `--dry-run` skips this
 gate deliberately (§6.3).
 
 Confirm the tree state by running `git status --porcelain` directly at the

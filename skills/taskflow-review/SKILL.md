@@ -14,7 +14,7 @@ verifies rather than summarizes.
 - Default root: `.taskflow/`; select one `YYYY-MM-DD-<slug>/` folder. Honor a
   supplied slug; if more than one folder could apply, ask the owner.
 - Read the complete folder: README, ROADMAP, numbered documents, and `tasks/`
-  when present. Never use legacy workflow artifacts as input or fallback.
+  when present.
 
 ## Adversarial process
 

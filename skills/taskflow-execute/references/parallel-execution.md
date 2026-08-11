@@ -567,7 +567,7 @@ Two consequences, both practical:
 checkout **stops the run** before any dispatch. Report the dirty paths. **Do not
 stash and do not clean** — the dirt may belong to another agent working in the
 same shared checkout, which is exactly what was found in this workspace at
-framing time. (`--dry-run` skips this gate deliberately.)
+planning time. (`--dry-run` skips this gate deliberately.)
 
 **Per-repo slots.** A task whose `repo:` is a submodule works in that submodule's
 own worktree, on that submodule's integration branch. It does not work in the

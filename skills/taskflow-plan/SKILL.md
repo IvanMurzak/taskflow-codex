@@ -1,13 +1,13 @@
 ---
-name: "taskflow-frame"
-description: "Frame a system or feature change from verified repository evidence and owner decisions, then write a self-contained Taskflow architecture set and ROADMAP. Use for structural features and architectural changes."
-argument-hint: "<what to frame> [taskflow slug — writes .taskflow/YYYY-MM-DD-<slug>]"
+name: "taskflow-plan"
+description: "Plan a system or feature change from verified repository evidence and owner decisions, then write a self-contained Taskflow architecture set and ROADMAP. Use for structural features and architectural changes."
+argument-hint: "<what to plan> [taskflow slug — writes .taskflow/YYYY-MM-DD-<slug>]"
 ---
 
-# Taskflow frame
+# Taskflow plan
 
 Any user or agent may invoke this skill to start the Taskflow lifecycle. It
-establishes the durable architecture frame; it does not begin implementation.
+establishes the durable architecture plan; it does not begin implementation.
 
 ## Artifact contract
 
@@ -16,10 +16,8 @@ establishes the durable architecture frame; it does not begin implementation.
   which the folder is created; do not rename existing folders. A caller may
   select the slug but cannot redirect artifacts outside `.taskflow/`. If the
   folder exists, read it before extending it.
-- Legacy workflow artifacts are archives: do not read, migrate, or use them as
-  fallback.
 
-## Frame from evidence
+## Plan from evidence
 
 1. Resolve the kebab-case slug, prefix it with today's local date as
    `YYYY-MM-DD-<slug>`, and report the intended folder. Extract the problem and
@@ -59,5 +57,5 @@ establishes the durable architecture frame; it does not begin implementation.
 5. Record each owner answer as a dated D1, D2, and so on in both the README and
    target ledger. Mark amendments `REVISED` with a date and rationale.
 
-Commit only the taskflow folder when a commit is appropriate. When the frame is
+Commit only the taskflow folder when a commit is appropriate. When the plan is
 stable, the next owner-invoked stage is `taskflow-review`.

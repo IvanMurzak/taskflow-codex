@@ -12,8 +12,7 @@ unresolved product question.
 ## Location and outputs
 
 - Default root: `.taskflow/`; use one `YYYY-MM-DD-<slug>/` folder. Honor a supplied
-  slug and resolve ambiguity with the owner. Never use legacy workflow
-  artifacts.
+  slug and resolve ambiguity with the owner.
 - Write `<slug>/tasks/README.md` with the coefficient legend, model rubric,
   group table, and a pointer to `../ROADMAP.md`.
 - Write one immutable `<slug>/tasks/<id>-<slug>.md` per PR-able task:
