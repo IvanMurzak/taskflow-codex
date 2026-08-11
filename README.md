@@ -71,7 +71,7 @@ Pick a short name for your change. Every step uses that same name. Here it is
 ### 1. Plan it
 
 ```text
-taskflow-plan feature-abs
+/taskflow-plan feature-abs
 description of the feature..., the whole story by a user....
 ```
 
@@ -83,7 +83,7 @@ three questions that actually change the outcome, and writes the plan to
 ### 2. Review the plan
 
 ```text
-taskflow-review feature-abs
+/taskflow-review feature-abs
 ```
 
 Three independent reviewers try to prove the plan wrong: against your code,
@@ -94,7 +94,7 @@ question.
 ### 3. Turn it into tasks
 
 ```text
-taskflow-tasks feature-abs
+/taskflow-tasks feature-abs
 ```
 
 The plan becomes numbered, immutable task specs — grouped so that two tasks in
@@ -104,7 +104,7 @@ the same wave can never touch the same files — plus a status board in
 ### 4. Execute
 
 ```text
-taskflow-execute feature-abs
+/taskflow-execute feature-abs
 ```
 
 > Best run in a **fresh context window**. It is a long job, and it does not need
@@ -119,7 +119,7 @@ Want it faster, and reviewed as it goes? This needs the
 which is what gives each concurrent worker a working directory of its own:
 
 ```text
-taskflow-execute feature-abs --parallel=4 --review=high
+/taskflow-execute feature-abs --parallel=4 --review=high
 ```
 
 ## What lands on disk
@@ -145,7 +145,7 @@ half-finished run can never lie to you about where it got to.
 ## Documentation
 
 - [The four skills](#the-four-skills)
-- [`taskflow-execute` flags](#taskflow-execute-flags)
+- [`taskflow-execute` flags](#/taskflow-execute-flags)
 - [Execution tiers — and the Pipeline CLI is required, not optional](#execution-tiers--and-the-pipeline-cli-is-required-not-optional)
 - [There is no `native` tier on Codex, and that is a measurement](#there-is-no-native-tier-on-codex-and-that-is-a-measurement)
 - [Why the minimum is 0.17.0](#why-the-minimum-is-0170)
