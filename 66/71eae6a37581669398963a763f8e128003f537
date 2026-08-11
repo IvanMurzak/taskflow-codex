@@ -1,0 +1,19 @@
+README.md
+  s_1c9b89cd67ae21::t_6d53648bc89434 22,27-29,49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6671eae6a37581669398963a763f8e128003f537",
+  "prompts": {},
+  "sessions": {
+    "s_1c9b89cd67ae21": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_1c9b89cd67ae21",
+        "model": "unknown"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
