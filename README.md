@@ -1,10 +1,9 @@
 # Taskflow Skills - Codex
 
-[![Release](https://img.shields.io/github/v/release/IvanMurzak/taskflow-codex?style=flat-square&color=0d1117&label=release)](https://github.com/IvanMurzak/taskflow-codex/releases)
-[![License](https://img.shields.io/badge/license-MIT-0d1117?style=flat-square)](LICENSE)
-[![Codex](https://img.shields.io/badge/Codex-plugin-0d1117?style=flat-square)](https://developers.openai.com/codex/)
-[![Skills](https://img.shields.io/badge/skills-4-0d1117?style=flat-square)](#the-four-skills)
-[![Stars](https://img.shields.io/github/stars/IvanMurzak/taskflow-codex?style=flat-square&color=0d1117)](https://github.com/IvanMurzak/taskflow-codex/stargazers)
+[![Codex](https://img.shields.io/badge/Codex-plugin-10A37F?style=for-the-badge&labelColor=0D1117)](https://developers.openai.com/codex/)
+[![Release](https://img.shields.io/github/v/release/IvanMurzak/taskflow-codex?style=for-the-badge&logo=github&logoColor=white&label=release&labelColor=0D1117&color=3FB950)](https://github.com/IvanMurzak/taskflow-codex/releases)
+[![Skills](https://img.shields.io/badge/skills-4-A855F7?style=for-the-badge&labelColor=0D1117)](#the-four-skills)
+[![License](https://img.shields.io/badge/license-MIT-6E7681?style=for-the-badge&labelColor=0D1117)](LICENSE)
 
 ![Taskflow — plan, review, tasks, execute](https://raw.githubusercontent.com/IvanMurzak/taskflow-codex/main/docs/taskflow-codex.svg)
 
@@ -23,8 +22,31 @@ codex plugin marketplace add IvanMurzak/pipeline-codex-marketplace
 codex plugin install taskflow@pipeline-codex
 ```
 
-That's it — no config file, no API key, no account. Restart Codex and the four
-skills are there.
+Restart Codex and the four skills are there.
+
+> The marketplace is called `pipeline-codex` because one marketplace carries both
+> of my Codex plugins. The plugin you just installed is `taskflow`.
+
+### Required for parallel execution on this host
+
+```bash
+bun add -g @baizor/pipeline    # the Pipeline CLI, 0.17.0 or above
+```
+
+Codex gives a subagent no working directory of its own — that is measured, not
+assumed, and the experiment is [below](#there-is-no-native-tier-on-codex-and-that-is-a-measurement).
+So the CLI is what supplies each concurrent worker a slot to work in. Without it
+`--parallel` is forced to `1`; the run says so once, naming the version it found
+and the minimum required, and every ready task still runs — one at a time.
+
+Optional, and separate from the CLI:
+
+```bash
+codex plugin install pipeline@pipeline-codex
+```
+
+The Pipeline plugin adds pipeline authoring — which is what
+`--engine=pipeline --pipeline=<name>` then hands each task to.
 
 > **One extra copy, once per project.** `taskflow-execute` dispatches through two
 > agent roles that a Codex plugin manifest has no channel for shipping. Copy
