@@ -1034,10 +1034,38 @@ reaped with `completed`, because there is nothing to preserve.
 provisioned and whether each is still on disk — use it to build the "what was
 preserved and why" section of the report.
 
+### 12.3.1 A run does not leave a standing claim behind it
+
+**Every slot record this run created is a claim, and the run is responsible for
+retiring it — on every path by which the run ends**, not only the one where every
+row went green. A run ends when it stops: completed, halted, drained by
+`--on-fail=stop`, or interrupted mid-round.
+
+Before the run is over, every record `pipeline worktree list --json` attributes to
+it must have a stated disposition: **reaped** (§12.2, after the reaping
+precondition at the head of §12), or **preserved with its reason and path**
+(§12.3). A record with neither is a leak this run created, and §11's resume will
+read it as evidence — the registry is the channel that section calls the reliable
+one, so a stale entry there is believed rather than doubted.
+
+**Where the Claude module's equivalent problem does not reach us, and where it
+does.** That host leaves a *lock* naming a pid on each per-agent isolation
+worktree, and a session that dies before its sweep leaves the lock standing; the
+next run cannot tell it from a live worker, because the pid named is the
+orchestrator's rather than the agent's. **None of that exists here** — §10.1 —
+and this subsection is not that section imported by analogy. What is shared is
+only the shape: *a claim can outlive the run that made it.* On this host the
+claim is the slot record, it carries **no pid and no liveness signal of any
+kind**, and that cuts both ways — a stale record never masquerades as a live
+worker, so it is the milder failure; but for exactly the same reason nothing here
+will ever tell you it is stale, so it can only be resolved from the tree
+(§12's precondition) and never from the registry alone.
+
 ### 12.4 At run completion
 
 When every scoped row is verified complete: update the taskflow README status and
-the ROADMAP counter, remove any thin pointer created for this run, then
+the ROADMAP counter, remove any thin pointer created for this run, **retire every
+slot record this run still holds a claim on** (§12.3.1), then
 
 ```
 pipeline gc [--project <path>] [--json] [--no-submodules]

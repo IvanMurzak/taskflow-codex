@@ -708,9 +708,20 @@ disagree, the registry wins.**
 ## 13. Finish, and what never to do
 
 When every scoped row is verified complete: update the taskflow README status
-and the ROADMAP counter, remove any thin pointer created for this run, commit,
-and report verified results, withheld tasks and why, preserved slots and why,
-and every outstanding gate.
+and the ROADMAP counter, remove any thin pointer created for this run, retire
+every slot record this run still holds a claim on, commit, and report verified
+results, withheld tasks and why, preserved slots and why, and every outstanding
+gate.
+
+**Retiring those claims is not conditional on the run finishing well.** A run
+ends when it stops — completed, halted, drained by `--on-fail=stop`, or
+interrupted — and a slot record this run created is this run's to retire on every
+one of those paths. Each must end the run either reaped or preserved with its
+reason and path; a record that is neither is a leak this run made, and §12's
+resume reads the registry as its reliable channel, so a stale entry there is
+believed rather than doubted. `references/parallel-execution.md` §12.3.1 owns
+this, including why the milder shape it takes on this host is also the harder one
+to detect.
 
 Never: mark work complete from a worker's report, run two tasks from the same
 group concurrently, edit a task specification, implement inline yourself, leave
