@@ -807,3 +807,23 @@ So state the dependency rather than assuming it:
   neither the never-review-your-own-diff rule nor the never-implement rule, and
   once its output is posted to a pull request it is indistinguishable from a
   contract review.
+
+---
+
+## 15. Archive a fully completed taskflow
+
+After the final outcome has been verified and recorded, archive the taskflow
+**only when every task in `.taskflow/<slug>/` is `✅ done`**. Completing a
+partial `--scope` is not enough: leave the folder active while any row remains
+pending, in progress, held, or blocked.
+
+First finish the §13 bookkeeping inside the taskflow folder — its README status,
+ROADMAP counter, and removal of any thin pointer. Then create `.taskflow/archive/`
+if needed and move the **entire** `.taskflow/<slug>/` directory, including all of
+its files and subdirectories, to `.taskflow/archive/<slug>/`. Commit that move as
+the final taskflow state change so active work and archived work remain visibly
+separate.
+
+Never overwrite or merge into an existing `.taskflow/archive/<slug>/`: stop and
+ask the owner how to resolve the collision. Do not archive a taskflow on a failed,
+halted, interrupted, or otherwise incomplete run.
