@@ -1,0 +1,21 @@
+skills/taskflow-execute/SKILL.md
+  s_b0ee788da08827::t_4745b73869ac66 810-829
+.codex-plugin/plugin.json
+  s_b0ee788da08827::t_4745b73869ac66 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "127ad352f143a89f31f92a3052fd2abcf399134b",
+  "prompts": {},
+  "sessions": {
+    "s_b0ee788da08827": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00e7d-ecd1-76f1-afb8-1765cdbbef6c",
+        "model": "gpt-5.6-terra"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
