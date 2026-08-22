@@ -19,10 +19,19 @@ Four commands, in order. That is the whole thing.
 
 ```bash
 codex plugin marketplace add IvanMurzak/pipeline-codex-marketplace
-codex plugin install taskflow@pipeline
+codex plugin add taskflow@pipeline
 ```
 
 Restart Codex and the four skills are there.
+
+If the marketplace was previously registered as `pipeline-codex`, replace that
+legacy registration before installing:
+
+```bash
+codex plugin marketplace remove pipeline-codex
+codex plugin marketplace add IvanMurzak/pipeline-codex-marketplace
+codex plugin add taskflow@pipeline
+```
 
 > One marketplace carries both of my Codex plugins, and its id is `pipeline` —
 > hence the `@pipeline` suffix. The plugin you just installed is `taskflow`;
@@ -46,7 +55,7 @@ and the minimum required, and every ready task still runs — one at a time.
 <br>
 
 ```bash
-codex plugin install pipeline@pipeline
+codex plugin add pipeline@pipeline
 ```
 
 The plugin adds pipeline authoring — which is what
