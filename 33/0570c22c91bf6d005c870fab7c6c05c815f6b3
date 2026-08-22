@@ -1,0 +1,19 @@
+README.md
+  s_f817567f3b7c90::t_f7354db5f70829 22,27-35,58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "330570c22c91bf6d005c870fab7c6c05c815f6b3",
+  "prompts": {},
+  "sessions": {
+    "s_f817567f3b7c90": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02bbe-253f-7a52-a9d3-32bed30aa45b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
