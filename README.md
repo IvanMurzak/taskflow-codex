@@ -24,15 +24,6 @@ codex plugin add taskflow@pipeline
 
 Restart Codex and the four skills are there.
 
-If the marketplace was previously registered as `pipeline-codex`, replace that
-legacy registration before installing:
-
-```bash
-codex plugin marketplace remove pipeline-codex
-codex plugin marketplace add IvanMurzak/pipeline-codex-marketplace
-codex plugin add taskflow@pipeline
-```
-
 > One marketplace carries both of my Codex plugins, and its id is `pipeline` —
 > hence the `@pipeline` suffix. The plugin you just installed is `taskflow`;
 > `pipeline` is the other one.
