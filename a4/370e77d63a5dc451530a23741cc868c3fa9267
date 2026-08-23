@@ -1,0 +1,48 @@
+docs/2026-08-09-codex-subagent-isolation.md
+  s_0634882bcd21ce::t_f87961b5e035cd 238-241,245,247-250
+README.md
+  s_0634882bcd21ce::t_d7a25adc1e1039 60-62
+  s_0634882bcd21ce::t_f87961b5e035cd 119-120,122-123,153-154,156
+  s_0634882bcd21ce::t_3acb2aeb101296 31,34,37-39,217-218,221,247,254-255,261,279-281,285-288,311,318,333,335-338,340,342-345
+.github/scripts/check_execute_contract.py
+  s_0634882bcd21ce::t_f40c5b6797668c 2,14-17,19,21,24-28,31-33,37-59
+skills/taskflow-execute/references/submodules.md
+  s_0634882bcd21ce::t_250563f050cd70 1-17
+skills/taskflow-review/SKILL.md
+  s_0634882bcd21ce::t_46c1c1e9a8476e 3,8-9,11,13-16,18-22,24-28
+skills/taskflow-plan/SKILL.md
+  s_0634882bcd21ce::t_46c1c1e9a8476e 3,8-28
+.codex/agents/taskflow-reviewer.toml
+  s_0634882bcd21ce::t_9f35ede733fe6b 2,7-10,12-15
+.codex-plugin/plugin.json
+  s_0634882bcd21ce::t_308b992ef20363 3
+skills/taskflow-execute/references/code-review.md
+  s_0634882bcd21ce::t_250563f050cd70 1-16
+skills/taskflow-execute/references/parallel-execution.md
+  s_0634882bcd21ce::t_250563f050cd70 1,3-5,7,9-12,14,16-19,21-23,25,27-29,31-36,38,41-42,44,46-48
+  s_0634882bcd21ce::t_fff83556b3db4c 37
+.codex/agents/taskflow-implementer.toml
+  s_0634882bcd21ce::t_9f35ede733fe6b 2,7-29
+skills/taskflow-tasks/SKILL.md
+  s_0634882bcd21ce::t_46c1c1e9a8476e 3,8-9,11,13-28,31-35,37,39-42,44-45
+skills/taskflow-execute/SKILL.md
+  s_0634882bcd21ce::t_28b09db5fb262a 17-22
+  s_0634882bcd21ce::t_8c5027b7125589 67-68
+  s_0634882bcd21ce::t_b508e504155fa6 3-16,23-66,69-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "a4370e77d63a5dc451530a23741cc868c3fa9267",
+  "prompts": {},
+  "sessions": {
+    "s_0634882bcd21ce": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c86-9005-7e70-8391-b1c89046349d",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
