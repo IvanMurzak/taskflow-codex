@@ -1,55 +1,28 @@
 ---
 name: "taskflow-review"
-description: "Adversarially verify a Taskflow folder against repository code, authoritative external specifications, and internal consistency, then apply confirmed non-product corrections in one batch."
-argument-hint: "[<taskflow slug> — default: the single YYYY-MM-DD-<slug> folder under .taskflow/]"
+description: "Adversarially verify a Taskflow against repository truth, authoritative specifications, and internal consistency, then correct confirmed non-product defects."
 ---
 
 # Taskflow review
 
-Any user or agent may invoke this skill to review an existing taskflow. It
-verifies rather than summarizes.
+Select the named `.taskflow/YYYY-MM-DD-<slug>/`; use the only candidate when
+unambiguous. Read the complete folder.
 
-## Select and read artifacts
+Verify three lenses, concurrently when useful:
 
-- Default root: `.taskflow/`; select one `YYYY-MM-DD-<slug>/` folder. Honor a
-  supplied slug; if more than one folder could apply, ask the owner.
-- Read the complete folder: README, ROADMAP, numbered documents, and `tasks/`
-  when present.
+- repository claims and feasibility, with `file:line` evidence;
+- current authoritative external requirements, with citations;
+- cross-document decisions, dependencies, migration, security, UX, and ROADMAP
+  consistency.
 
-## Adversarial process
+Classify confirmed findings P0 (broken guarantee), P1 (material gap), or P2
+(clarity/staleness). Challenge each finding, deduplicate, then apply factual and
+mechanical corrections in one batch. Never change a product decision: present
+the evidence and recommendation, obtain the owner choice, and record it as
+dated `REVISED`.
 
-1. Independently investigate three areas, using available repository search,
-   web research, and delegation where useful:
-
-   - **Repository truth:** verify factual and feasibility claims against source
-     with `file:line` evidence, including byte-level and cross-language parity.
-   - **External conformance:** consult current authoritative standards, protocol
-     specifications, vendor behavior, and SDK source. Cite MUST/SHOULD issues.
-   - **Consistency and completeness:** test decisions, requirements,
-     dependencies, migration, gates, threat coverage, UX budgets, stale text,
-     and ROADMAP/task-spec state ownership against one another.
-
-   Classify P0 (broken guarantee/material falsehood), P1 (gap/risk), and P2
-   (wording/stale text). Each investigation also lists what it verified sound.
-2. Wait for all investigations, deduplicate their evidence, and correct only
-   confirmed factual or mechanical issues in one coherent batch.
-3. Never override an owner product decision. For deployment, compatibility,
-   identity, UX, monetization, scope, production effects, money, secrets, or
-   irreversibility, present evidence and a safe recommendation, obtain the
-   owner decision, then write `REVISED` with date and rationale in the ledger.
-4. Sweep the entire taskflow folder for every replaced term, parameter, number,
-   and path. Update README status and ROADMAP's progress log, then commit only
-   the taskflow folder when a commit is appropriate.
-
-## Required checks
-
-- `ROADMAP.md` is the only mutable task-state record and its executing
-  orchestrator is its only writer after evidence verification.
-- Specs never contain `status`; they contain `sequence`,
-  `security_critical`, and `production_touching` when tasks exist.
-- Waves, dependency edges, migration phases, and gates agree.
-- The execution plan uses available forge/CI capabilities or, if absent,
-  isolated worktrees with local repository evidence.
-
-The next stage is `taskflow-tasks`; a user or agent may invoke it when the
-review is complete.
+Check that `ROADMAP.md` is the sole live task-state record; task specs contain no
+`status`; waves, gates, dependencies, and specs agree; execution has an isolated
+worktree path. Update the README and ROADMAP log, then commit only the Taskflow
+folder when appropriate. Continue with `taskflow-tasks` when no finding or owner
+question remains.

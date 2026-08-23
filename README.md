@@ -28,17 +28,15 @@ Restart Codex and the four skills are there.
 > hence the `@pipeline` suffix. The plugin you just installed is `taskflow`;
 > `pipeline` is the other one.
 
-### Required for parallel execution on this host
+### Optional execution toolkit
 
 ```bash
-bun add -g @baizor/pipeline    # the Pipeline CLI, 0.17.0 or above
+bun add -g @baizor/pipeline    # optional ports/submodule/cleanup automation
 ```
 
-Codex gives a subagent no working directory of its own — that is measured, not
-assumed, and the experiment is [below](#there-is-no-native-tier-on-codex-and-that-is-a-measurement).
-So the CLI is what supplies each concurrent worker a slot to work in. Without it
-`--parallel` is forced to `1`; the run says so once, naming the version it found
-and the minimum required, and every ready task still runs — one at a time.
+Codex gives a subagent no working directory of its own. Taskflow therefore
+creates one native git worktree per task. The CLI is optional automation, not a
+requirement for parallel execution.
 
 <details>
 <summary><b>Optional — the Pipeline plugin, which is a different thing</b></summary>
@@ -59,9 +57,9 @@ worker's slot, and Taskflow resolves `pipeline` from `PATH`.
 > **One extra copy, once per project.** `taskflow-execute` dispatches through two
 > agent roles that a Codex plugin manifest has no channel for shipping. Copy
 > `.codex/agents/taskflow-implementer.toml` and `.codex/agents/taskflow-reviewer.toml`
-> from this repository into your project's own `.codex/agents/`. If they are
-> missing the run still works — with a generic agent type, the worker rules
-> inlined into each brief, and a line in the report saying so.
+> from this repository into your project's own `.codex/agents/`. Execution
+> stops if the implementer role is missing: inlining worker rules would violate
+> the path-only dispatch contract and waste context on every task.
 
 ## How to use
 
@@ -118,12 +116,11 @@ the same wave can never touch the same files — plus a status board in
 > anything from the conversation you just had — everything it needs is on disk.
 
 It works through the board: verified against the repository rather than against
-what a worker claims, one PR per task, board updated after each one. Nothing
-merges without you unless you ask for that.
+what a worker claims, one PR per task, board updated after each one. By default,
+a PR merges only after DoD, review, CI, and owner gates are green.
 
-Want it faster, and reviewed as it goes? This needs the
-[Pipeline CLI](#execution-tiers--and-the-pipeline-cli-is-required-not-optional),
-which is what gives each concurrent worker a working directory of its own:
+Want it faster, and reviewed as it goes? Native git worktrees isolate each
+concurrent worker; the Pipeline CLI is optional:
 
 ```text
 /taskflow-execute device-pairing --parallel=4 --review=high
@@ -153,10 +150,10 @@ half-finished run can never lie to you about where it got to.
 
 - [The four skills](#the-four-skills)
 - [`taskflow-execute` flags](#/taskflow-execute-flags)
-- [Execution tiers — and the Pipeline CLI is required, not optional](#execution-tiers--and-the-pipeline-cli-is-required-not-optional)
-- [There is no `native` tier on Codex, and that is a measurement](#there-is-no-native-tier-on-codex-and-that-is-a-measurement)
+- [Execution tiers](#execution-tiers)
+- [Codex has no host-provided worktree isolation](#codex-has-no-host-provided-worktree-isolation)
 - [Why the minimum is 0.17.0](#why-the-minimum-is-0170)
-- [Why `--merge` defaults to `ask`](#why---merge-defaults-to-ask)
+- [Why `--merge` defaults to `on-green`](#why---merge-defaults-to-on-green)
 - [Workflow contract](#workflow-contract)
 - [What ships in this repository](#what-ships-in-this-repository)
 - [License](#license)
@@ -217,11 +214,11 @@ disagree.
 |---|---|---|---|
 | `<slug>` (positional) | a taskflow folder under `.taskflow/` | the only folder there | ambiguity is resolved with you, never guessed |
 | `--scope=` | `all` · `wave:N` · `group:B` · comma-separated id list | `all` | free-text scope after the slug is also accepted |
-| `--parallel=` | `1` · `N` · `auto` | `1` | `>1` (or `auto`) enables concurrent dispatch — and on this host requires the Pipeline CLI, see below |
-| `--engine=` | `auto` · `toolkit` · `pipeline` | `auto` | picks the execution tier. **There is no `native` value here** |
+| `--parallel=` | `1` · `N` · `auto` | `1` | `>1` (or `auto`) enables concurrent isolated dispatch |
+| `--engine=` | `auto` · `native` · `toolkit` · `pipeline` | `auto` | picks the execution tier |
 | `--pipeline=` | a pipeline name | — | only valid together with `--engine=pipeline` |
 | `--review=` | `off` · `low` · `medium` · `high` · `xhigh` | `off` | anything but `off` dispatches a reviewer that is never the implementer |
-| `--merge=` | `ask` · `on-green` · `never` | `ask` | applies outside the `pipeline` tier, which merges by its own run definition |
+| `--merge=` | `ask` · `on-green` · `never` | `on-green` | applies outside the `pipeline` tier, which merges by its own run definition |
 | `--submodules=` | `auto` · `off` | `auto` | `auto` means "run the sync only when `git submodule status` is non-empty" |
 | `--solo=` | comma-separated id list | empty | forces single-slot dispatch for a task that needs an exclusive resource |
 | `--on-fail=` | `continue` · `stop` | `continue` | `stop` drains the in-flight slots and halts the run |
@@ -247,20 +244,21 @@ which.
 `--worktree-root`, `--seed` and `--base` are deliberately not part of this
 surface; each is owned elsewhere, and being unrecognized they stop the run.
 
-## Execution tiers — and the Pipeline CLI is required, not optional
+## Execution tiers
 
 `--engine` picks the substrate that provisions a task's working directory.
 Default `auto`.
 
 | Tier | Needs | Provides |
 |---|---|---|
-| `toolkit` *(the only parallel tier)* | The `pipeline` CLI at **0.17.0** or above. `--engine=auto` resolves here once the installed CLI is at or above that version | One CLI-provisioned slot per worker: a working directory outside the repository, a `worktree-<task-id>` branch cut from an arbitrary base, a resolved env file and a port block, plus per-submodule worktrees, `ci-wait`, `submodule bump` and `gc` |
+| `native` | Git | One scheduler-created worktree per task, including root-repository tasks (`repo: "."`) and submodule tasks |
+| `toolkit` | A compatible `pipeline` CLI | CLI-managed worktrees, ports, submodule slots, CI waiting, pointer sync, and cleanup |
 | `pipeline` | Explicit `--engine=pipeline --pipeline=<name>` | Each task becomes one `pipeline drive` run, which owns implement → review → PR → CI → merge → sync itself. `--merge` does not apply here |
 
 `--engine=auto` never selects `pipeline`: that tier hands merge authority to a
 pipeline definition, which is an owner decision and has to be typed.
 
-### There is no `native` tier on Codex, and that is a measurement
+### Codex has no host-provided worktree isolation
 
 The Claude plugin has a third tier, `native`, which needs no CLI at all because
 Claude Code cuts a worktree per worker itself and enforces the main-checkout
@@ -278,22 +276,16 @@ The full experiment, its caveats, and instructions for re-running it against a
 newer Codex build are in
 [`docs/2026-08-09-codex-subagent-isolation.md`](docs/2026-08-09-codex-subagent-isolation.md).
 
-Because the tier does not exist, `--engine=native` stops the run at parse time
-with its own message rather than the generic unknown-value one — it is the value
-a reader porting a Claude command line will type.
+Taskflow's `native` tier supplies the missing mechanism itself with git
+worktrees. The measurement still matters: merely spawning agents is not
+isolation.
 
 **The consequence is the inverse of the Claude plugin's.**
 
-- **The Pipeline CLI is mandatory here, not an upgrade.** On Claude Code the CLI
-  adds ports, submodule worktrees and an arbitrary base branch on top of a
-  working `native` tier. On Codex there is no tier underneath `toolkit`.
-- **`--parallel > 1` requires `toolkit` or `pipeline`.** Two Codex subagents
-  working the same repository without CLI-provisioned slots collide on the same
-  files, the same index and the same `HEAD` — with no host mechanism preventing
-  it and no error when it happens.
-- **Without the CLI the run is sequential, not parallel-but-unsafe.**
-  `--parallel` is forced to `1`, the run says so once naming the version it found
-  and the minimum required, and every ready task still runs — one at a time.
+- **The Pipeline CLI is optional.** It adds ports and lifecycle automation over
+  native git worktrees.
+- **`--parallel > 1` always requires worktrees, not necessarily the CLI.** Two
+  agents in the shared checkout would collide; native mode prevents that.
 - **Dispatch and isolation are separate concerns on this host.** Codex subagents
   are the correct dispatch primitive and remain so; what they do not supply is a
   working directory. Do not read the presence of subagents as evidence of
@@ -316,15 +308,14 @@ is the only boundary the `native` tier is defined by.
 | Boundary between two workers | Yes | **None** |
 
 The two hosts fail in opposite directions and neither is strictly safer. That
-asymmetry is why this plugin is not a mechanical copy of the Claude one, and why
-the CLI is optional on one host and required on the other.
+asymmetry is why this plugin creates native worktrees explicitly on Codex.
 
 ### Why the minimum is 0.17.0
 
 `--engine=auto` reads `pipeline --version` and compares it **numerically**
 against `0.17.0` — never by checking that the binary exists, and never by probing
 the subcommand. At or above it, `auto` resolves to `toolkit`. Below it, absent,
-or unparseable, the run states the reason once and continues sequentially. A CLI
+or unparseable, the run states the reason once and continues in native mode. A CLI
 that is present but older resolves the same way, because a presence check would
 resolve it to `toolkit` and then fail on first use — a silent misdetection
 instead of an announced degradation.
@@ -339,35 +330,19 @@ concludes that a submodule slot holding uncommitted work is an empty shell. That
 verdict destroyed 21,880 bytes of finished implementation in this design's own
 proving run.
 
-### What a sequential run withholds
+### What native mode does not automate
 
-Without the CLI, three kinds of task cannot run, and only these three:
+Native git worktrees provide repository and branch isolation, including for the
+root repository and submodules. They do not allocate collision-free ports or
+provide the toolkit's lifecycle records. A task requiring those facilities stays
+pending until toolkit execution is available.
 
-- a task that needs a bound **port** — nothing hands out a free port block;
-- a task whose `repo:` is a **submodule** — the session checkout's submodules are
-  the shared ones, and a worker committing in them writes the checkout every
-  other agent is using;
-- a task that must integrate on a **base branch other than the repository
-  default** — there is nowhere to cut a slot from another branch.
+## Why `--merge` defaults to `on-green`
 
-A withheld task's row stays pending, not failed. The reason is reported once per
-run — naming the state, the gap and the affected task ids — and every other ready
-task still runs. Installing `pipeline` at 0.17.0 or above and re-running is
-normally all that unblocks them.
-
-## Why `--merge` defaults to `ask`
-
-`--merge=ask` holds each finished task at "verified, merge held" and waits for
-you — nothing merges unattended. That is the default because an orchestrator that
-merges pull requests by itself, by default, is a large blast radius for a plugin
-anyone can install.
-
-`--merge=on-green` (merge once CI is green, no blocking review finding is open,
-and the row is behind no approval gate) and `--merge=never` (stop at "verified,
-merge held" permanently, and never ask) both exist for when you want something
-else — but they are opt-in, and neither bypasses branch protection nor elevates
-under any circumstance. `--merge` governs the `toolkit` tier and the sequential
-fallback; the `pipeline` tier merges by its own run definition instead.
+`on-green` merges only after DoD verification, required review, required CI,
+and owner gates pass. It never bypasses branch protection. Use `ask` to hold for
+manual approval or `never` to leave verified PRs open. The `pipeline` tier owns
+its own merge policy.
 
 ## Workflow contract
 

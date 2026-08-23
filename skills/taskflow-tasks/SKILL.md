@@ -1,76 +1,45 @@
 ---
 name: "taskflow-tasks"
-description: "Decompose a reviewed Taskflow folder into immutable implementation-ready task specifications, conflict-safe groups, dependencies, model tiers, and ROADMAP execution waves."
-argument-hint: "[<taskflow slug> — default: the single YYYY-MM-DD-<slug> folder under .taskflow/]"
+description: "Turn a reviewed Taskflow into immutable task specs, dependency-safe groups, model tiers, and ROADMAP execution waves."
 ---
 
 # Taskflow tasks
 
-Any user or agent may invoke this skill for a locked, reviewed taskflow with no
-unresolved product question.
+Select one reviewed `.taskflow/YYYY-MM-DD-<slug>/`. Stop for unresolved product
+questions or unapplied review findings.
 
-## Location and outputs
+Create `tasks/README.md` and one PR-sized immutable spec per task:
 
-- Default root: `.taskflow/`; use one `YYYY-MM-DD-<slug>/` folder. Honor a supplied
-  slug and resolve ambiguity with the owner.
-- Write `<slug>/tasks/README.md` with the coefficient legend, model rubric,
-  group table, and a pointer to `../ROADMAP.md`.
-- Write one immutable `<slug>/tasks/<id>-<slug>.md` per PR-able task:
-
-  ```markdown
-  ---
-  id: "b3-pairing-plane"
-  title: "One-line task title"
-  group: "B"
-  sequence: 3
-  repo: "repo-or-submodule-path"
-  depends_on: ["a2-library-gate"]
-  importance: 1
-  complexity: 1
-  security_critical: false
-  production_touching: false
-  model_hint: "fast"
-  taskflow_refs: ["02-target-architecture.md", "04-protocol.md"]
-  ---
-
-  ## Goal
-  ## Scope & seams
-  ## Definition of Done
-  ```
-
-`sequence` increases strictly within its group. Never include `status`: specs
-are immutable and all live task state belongs solely to `ROADMAP.md`.
-
-## ROADMAP update
-
-Populate execution waves and its single status board:
-
-```text
-| Task (spec) | needs | imp/cx | model | Status | Run / PR | Updated |
-| [b3-pairing-plane](tasks/b3-pairing-plane.md) | a2 | 9/7 | top | ⬜ pending | | |
+```yaml
+---
+id: "b3-example"
+title: "One-line title"
+group: "B"
+sequence: 3
+repo: "."
+base_branch: "main"
+depends_on: ["a2-example"]
+importance: 1
+complexity: 1
+security_critical: false
+production_touching: false
+model_hint: "fast"
+taskflow_refs: ["02-target-architecture.md"]
+---
 ```
 
-State explicitly that the board is the only task-state record, that the ready
-set is computed from `needs` and completed rows, and that only
-`taskflow-execute` updates board rows/progress after evidence verification. A
-workspace planning facility gets at most one thin pointer to this ROADMAP;
-never duplicate every task's state. Add explicit owner gates for production,
-money, secrets, and irreversible effects.
+Follow with `## Goal`, `## Scope & seams`, and `## Definition of Done`. Never
+add `status`; specs are immutable. `repo: "."` means the root repository and is
+fully supported. Use a submodule path only when the task changes that submodule.
 
-## Routing and safe parallelism
+Populate ROADMAP waves and rows using:
 
-- Importance measures impact of a missing/incorrect task. Complexity measures
-  depth, surface, risk, and correctness cliffs.
-- Complexity ≥8 maps to `top`, 5–7 to `mid`, and ≤4 to `fast`.
-  `security_critical` or `production_touching` raises one tier, with `top`
-  remaining top. These are consumer-project-approved model tiers, not pinned
-  model names.
-- A group is one merge-conflict domain. Run one group strictly by ascending
-  `sequence`; if overlap is uncertain, keep the tasks in one group.
-- Independent groups may run in parallel only when `depends_on` permits it.
-  End an artifact-producing group with an integration/publish gate that
-  downstream groups depend on.
+`| Task (spec) | needs | repo/base | imp/cx | model | Status | Run / PR | Updated |`
 
-Update the taskflow README and commit only this taskflow folder when
-appropriate. Any user or agent may invoke `taskflow-execute`; it must still
-obtain the explicit owner GO required before dispatch.
+Rules: one group is one conflict domain; run it by ascending `sequence`;
+independent groups may overlap when dependencies allow. Complexity 1–4 maps to
+`fast`, 5–7 to `mid`, 8–10 to `top`; raise one tier for security/production.
+Add owner gates for production, money, secrets, and irreversible effects.
+
+The ROADMAP is the only live state and only `taskflow-execute` updates it after
+verification. Commit only the Taskflow folder when appropriate.

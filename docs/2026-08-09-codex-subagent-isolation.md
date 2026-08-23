@@ -235,21 +235,19 @@ it is parallelism *inside one working tree*. Two Codex subagents editing the sam
 repository concurrently will collide on the same files, the same index, and the same
 `HEAD`, with no host mechanism preventing it.
 
-**Therefore, on Codex, the Pipeline CLI substrate is mandatory for any parallel
-execution against a shared repository.** This is the inverse of the Claude side, where
-the CLI is an optional upgrade over a working `native` tier. On Codex there is no tier
-underneath the CLI to fall back to: without it, the only safe setting is
-`--parallel=1`.
+**Therefore, Codex must not run parallel workers in the shared checkout.** The
+host supplies concurrency but not isolation. Taskflow now supplies isolation by
+creating one native git worktree per task; the Pipeline CLI is optional
+automation.
 
 ### What `g2` must carry
 
-`g2` writes the mirrored Codex contract. Its scope **includes stating this explicitly**:
+The Codex contract must preserve these conclusions:
 
-1. The Codex contract must **not** offer a `native` tier or `--engine=native`.
-2. It must state that `--parallel > 1` requires the Pipeline CLI, and that without it
-   the run is sequential.
-3. `--engine=auto` on Codex resolves to the CLI tier or to sequential — never to
-   `native`.
+1. `native` means scheduler-created git worktrees, never host-provided isolation.
+2. `--parallel > 1` requires one worktree per task, not necessarily the Pipeline CLI.
+3. `--engine=auto` may use a compatible CLI or native git worktrees, but never
+   the shared checkout.
 4. Codex subagents remain the correct **dispatch** primitive (§3.5 — `.codex/agents/*.toml`
    works, with `name` / `description` / `developer_instructions`). What they do not
    supply is *isolation*. Dispatch and isolation are separate concerns on Codex, and the
