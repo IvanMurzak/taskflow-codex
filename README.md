@@ -54,12 +54,6 @@ worker's slot, and Taskflow resolves `pipeline` from `PATH`.
 
 </details>
 
-> **One extra copy, once per project.** `taskflow-execute` dispatches through two
-> agent roles that a Codex plugin manifest has no channel for shipping. Copy
-> `.codex/agents/taskflow-implementer.toml` and `.codex/agents/taskflow-reviewer.toml`
-> from this repository into your project's own `.codex/agents/`. Execution
-> stops if the implementer role is missing: inlining worker rules would violate
-> the path-only dispatch contract and waste context on every task.
 
 ## How to use
 
