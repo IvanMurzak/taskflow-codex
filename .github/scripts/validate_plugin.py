@@ -100,6 +100,7 @@ def validate_manifest_shape(
         "skills",
         "apps",
         "mcpServers",
+        "agents",
         "interface",
         "author",
         "homepage",
