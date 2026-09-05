@@ -1,6 +1,6 @@
 {
   "name": "taskflow",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "A four-skill Taskflow lifecycle for architecture planning, adversarial verification, immutable task specifications, and ROADMAP-driven execution.",
   "author": {
     "name": "IvanMurzak"

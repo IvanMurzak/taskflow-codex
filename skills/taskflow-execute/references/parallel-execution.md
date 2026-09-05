@@ -46,3 +46,14 @@ The worktree root must be writable by the Codex session. If toolkit fails,
 `on-green` merges only when DoD, required review, and required CI are green.
 `ask` and `never` leave the row `🟣`. Workers and reviewers never merge. Never
 bypass protection or delete branches/worktrees whose ownership is uncertain.
+
+## Integration branch
+
+With `--integration-branch`, create or adopt the ref in each repository on the
+board before dispatch, and pass it as the base when provisioning each slot.
+Then verify: read back the slot's ACTUAL position per repository and refuse the
+dispatch if it is not the integration ref. A provisioner may honour a base for
+the superproject and silently ignore it for submodules, and a reused slot may
+report the base its ORIGINAL create used rather than the one requested now — a
+success return is not placement evidence. Task PRs target the integration ref;
+one final PR merges it into `base_branch`.
