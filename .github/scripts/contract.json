@@ -1,0 +1,16 @@
+{
+  "_comment": "Invariants asserted in skills/taskflow-execute/SKILL.md. Shared core + harness-specific entries. See check_execute_contract.py.",
+  "required_phrases": {
+    "merge default": "`--merge=on-green`",
+    "path-only dispatch": "absolute path to the",
+    "no task-body preload": "never load the task body",
+    "parallel batch": "before waiting",
+    "root repository": "`repo: \".\"` means the root",
+    "sole board writer": "only you may edit it",
+    "integration branch option": "`--integration-branch=auto|off|<name>`",
+    "integration branch per repo": "one ref per repository",
+    "integration branch verified": "Verify the host honoured the base",
+    "integration branch single land": "open ONE PR from the",
+    "native engine": "`native` uses git worktrees"
+  }
+}
