@@ -1,0 +1,104 @@
+.gitignore
+  s_1e228ed696a2a7::t_ccce34b897c34b 1-2
+skills/taskflow-execute/references/code-review.md
+  s_1e228ed696a2a7::t_db3caa8cd287bb 37-38,41-43
+  s_1e228ed696a2a7::t_12cee514d7bca9 10-24,36,39-40
+  s_1e228ed696a2a7::t_f5e69c3a8da2e4 6-8
+  s_1e228ed696a2a7::t_87bc570bf5f7f6 9
+README.md
+  s_1e228ed696a2a7::t_db3caa8cd287bb 168-170,255,297-298
+  s_1e228ed696a2a7::t_860d096a4045c7 210,216,234-236
+  s_1e228ed696a2a7::t_11aad50a3a1c41 223
+  s_1e228ed696a2a7::t_d3633d8f95d6a6 70,86,97,107,122,150,382
+  s_1e228ed696a2a7::t_aa5d3c24e78392 141-143,341-344
+  s_1e228ed696a2a7::t_e82669fe87a24a 14-15,89,100-101,114-116,164,327-340,375
+  s_1e228ed696a2a7::t_87bc570bf5f7f6 262,288,296,345
+  s_1e228ed696a2a7::t_f5e69c3a8da2e4 290-294
+agents/taskflow-implementer.toml
+  s_1e228ed696a2a7::t_db3caa8cd287bb 37-42
+  s_1e228ed696a2a7::t_d3633d8f95d6a6 23-31
+  s_1e228ed696a2a7::t_12cee514d7bca9 36
+skills/taskflow-execute/SKILL.md
+  s_1e228ed696a2a7::t_aa5d3c24e78392 65-68,146-156,180-186,202-205,213-216
+  s_1e228ed696a2a7::t_064d85fb146401 90-91
+  s_1e228ed696a2a7::t_af523f81972bfc 48
+  s_1e228ed696a2a7::t_203dfa77e3f60e 44-45,49-53
+  s_1e228ed696a2a7::t_b0ff796f790a0e 31-32,46,98
+  s_1e228ed696a2a7::t_860d096a4045c7 15-16,25-27
+  s_1e228ed696a2a7::t_db3caa8cd287bb 28-30,33-36,47,99-102,105,139-140,160-163,177-179
+  s_1e228ed696a2a7::t_f5e69c3a8da2e4 118-122
+  s_1e228ed696a2a7::t_d3633d8f95d6a6 79-82,171-175,200-201
+  s_a4a6d907d270ff::t_60a1f714fe14c7 60-64
+  s_1e228ed696a2a7::t_87bc570bf5f7f6 37,54,83,95-97,103-104,106-110,113,117,127-131,206
+skills/taskflow-execute/references/submodules.md
+  s_1e228ed696a2a7::t_11aad50a3a1c41 11-19
+  s_1e228ed696a2a7::t_aa5d3c24e78392 30-33
+.github/workflows/release.yml
+  s_1e228ed696a2a7::t_ccce34b897c34b 31-41,48-49,62-63
+skills/taskflow-plan/SKILL.md
+  s_1e228ed696a2a7::t_db3caa8cd287bb 24
+  s_1e228ed696a2a7::t_aa5d3c24e78392 26-31
+  s_a4a6d907d270ff::t_907e7aa8939040 25
+skills/taskflow-tasks/SKILL.md
+  s_a4a6d907d270ff::t_60a1f714fe14c7 38,41-43
+  s_1e228ed696a2a7::t_db3caa8cd287bb 37,39-40
+  s_1e228ed696a2a7::t_aa5d3c24e78392 45-48
+  s_a4a6d907d270ff::t_e43a6ea82255a0 44
+.github/scripts/contract.json
+  s_a4a6d907d270ff::t_60a1f714fe14c7 10
+  s_1e228ed696a2a7::t_8749a314d54094 12,15,17
+  s_1e228ed696a2a7::t_203dfa77e3f60e 23-24
+  s_1e228ed696a2a7::t_21b8dd0a510df6 19-20,22,26
+  s_1e228ed696a2a7::t_d3633d8f95d6a6 14
+  s_1e228ed696a2a7::t_db3caa8cd287bb 25,28
+  s_1e228ed696a2a7::t_e82669fe87a24a 29-32
+  s_1e228ed696a2a7::t_aa5d3c24e78392 16,18
+  s_1e228ed696a2a7::t_033ec5fcfd128d 27,33
+  s_1e228ed696a2a7::t_f5e69c3a8da2e4 21
+.github/scripts/check_execute_contract.py
+  s_1e228ed696a2a7::t_2e2cd5140c958e 4-6
+agents/taskflow-reviewer.toml
+  s_1e228ed696a2a7::t_12cee514d7bca9 7,16-17,19-20
+  s_1e228ed696a2a7::t_db3caa8cd287bb 8-14,18
+.github/scripts/validate_plugin.py
+  s_1e228ed696a2a7::t_21b8dd0a510df6 9,27-30,60,137,327-391
+.codex-plugin/plugin.json
+  s_1e228ed696a2a7::t_21b8dd0a510df6 3
+  s_1e228ed696a2a7::t_d3633d8f95d6a6 30
+docs/2026-08-09-codex-subagent-isolation.md
+  s_1e228ed696a2a7::t_12fa34d0b9674e 3-6,10-12,61-62,157-158,175-177,183,188-192,233,279-282,292,329,337
+skills/taskflow-execute/references/parallel-execution.md
+  s_1e228ed696a2a7::t_e82669fe87a24a 29-33,68-70,86-87
+  s_1e228ed696a2a7::t_87bc570bf5f7f6 17-20,34
+  s_1e228ed696a2a7::t_f5e69c3a8da2e4 13-16
+  s_1e228ed696a2a7::t_11aad50a3a1c41 51,88-96
+  s_1e228ed696a2a7::t_d3633d8f95d6a6 77-85
+docs/taskflow-codex.svg
+  s_1e228ed696a2a7::t_9e3d67e9f3ed2f 1
+docs/taskflow-steps.svg
+  s_1e228ed696a2a7::t_857dc09818b0f9 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "bb9834003c89a697df0f8fee2c79b17da3d996ca",
+  "prompts": {},
+  "sessions": {
+    "s_1e228ed696a2a7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a08d9d-0521-7cb3-85ef-6c14a5306720",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    },
+    "s_a4a6d907d270ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a08a70-7454-7c83-a185-ec99461323f0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
