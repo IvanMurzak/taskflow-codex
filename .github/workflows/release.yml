@@ -28,25 +28,25 @@ jobs:
         run: python -m pip install PyYAML
       - name: Validate plugin
         run: python .github/scripts/validate_plugin.py .
+      - name: Check taskflow-execute contract
+        run: python .github/scripts/check_execute_contract.py .
+      - name: Verify release tag matches plugin version
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          VERSION="$(python -c 'import json; print(json.load(open(".codex-plugin/plugin.json", encoding="utf-8"))["version"])')"
+          if [ "$RELEASE_TAG" != "v$VERSION" ]; then
+            echo "::error::release tag $RELEASE_TAG does not match plugin version $VERSION"
+            exit 1
+          fi
 
   release:
     needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      # `--target` is load-bearing. Without it `gh` creates the tag on the
-      # repository's DEFAULT branch (`main`), while this plugin develops on
-      # `next` — so a release dispatched from `next` would tag `main`'s tree,
-      # publish the wrong content, and still go green. That happened for real:
-      # at the 0.6.0 releases `main` still carried version 0.5.1 and a dead
-      # repository URL, and both releases only escaped because the operator
-      # pre-created the tag ref by hand first.
-      #
-      # $GITHUB_SHA, not a branch name: it is the exact commit this dispatch
-      # ran against, so it cannot drift if someone pushes to `next` between the
-      # validate job and this step — and it is the same commit `validate`
-      # checked out, which makes "what was validated" and "what is published"
-      # the same object by construction.
+      # Use the exact commit this dispatch validated. A branch name could drift
+      # between validation and release creation.
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -59,10 +59,8 @@ jobs:
             gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" --generate-notes
           fi
 
-      # `--target` is ignored when the tag ALREADY exists, so the flag alone
-      # cannot catch a tag pre-created at the wrong commit. This turns that
-      # silent-wrong-release into a red job, which is the failure mode this
-      # whole workflow keeps producing: green run, wrong artifact.
+      # `--target` is ignored when the tag already exists, so verify the final
+      # tag explicitly instead of trusting release creation alone.
       - name: Verify the tag points at the validated commit
         env:
           RELEASE_TAG: ${{ inputs.tag }}

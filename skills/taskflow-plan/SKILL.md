@@ -21,7 +21,14 @@ write Taskflow artifacts elsewhere or implement the change.
      documents only when the change needs them.
 4. Use this board schema:
 
-   `| Task (spec) | needs | repo/base | imp/cx | model | Status | Run / PR | Updated |`
+   `| id | Task (spec) | group | seq | needs | repo | base_branch | imp/cx | model | Status | Run / PR | Updated |`
+
+   Reserve this second table for execute-time integration landing state:
+
+   `| repo | base_branch | integration_ref | Final PR | Status | Updated |`
+
+   Leave it empty during planning. `taskflow-execute` populates it only when an
+   integration branch is active.
 
 `ROADMAP.md` is the only live task-state record. Commit only the Taskflow folder
 when a commit is appropriate. Continue with `taskflow-review` when decisions are

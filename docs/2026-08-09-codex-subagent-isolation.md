@@ -1,10 +1,15 @@
 # Codex subagent isolation — experimental finding
 
+> Historical, non-normative measurement of `codex-cli 0.147.0`. Current
+> Taskflow behavior is defined by the skills, and current Codex documentation
+> identifies custom agents by their TOML `name`.
+
 **Date:** 2026-08-09
 **Question:** Does a Codex subagent receive its own git worktree?
 **Answer:** **No.** All agents in a Codex session share one working directory.
-**Consequence:** **The `native` tier does not exist on Codex.** The Pipeline CLI
-substrate is *mandatory* on Codex for any parallel work on the same repository.
+**Consequence:** Codex did not provide per-agent worktrees on this build.
+Taskflow must provision one git worktree per task; its Pipeline CLI integration
+is optional automation around that native git mechanism.
 
 This note records an experiment, not a reading of documentation. Every claim below
 is tagged **OBSERVED** or **INFERRED**. Codex's subagent working-directory behaviour
@@ -53,8 +58,8 @@ have each report, from its own process:
 - a **shell-path** write inside the workspace, into the primary checkout, and outside the repo
 - a **tool-path** (`apply_patch`) write to the same three targets
 
-The shell and tool paths were probed separately because on Claude Code they behave
-differently (see §6).
+The shell and tool paths were probed separately to distinguish sandbox behavior
+from tool-specific write checks.
 
 Both subagents were dispatched for real. The host recorded them as
 `/root/probe_a` (thread `019fe63a-…`) and `/root/probe_b` (thread `019fe63b-…`),
@@ -149,8 +154,8 @@ patch rejected: writing outside of the project; rejected by user approval settin
 **OBSERVED.** After the run, `main/` still contained only `MAIN_MARKER.txt` and
 `outside/` still contained only `OUTSIDE_MARKER.txt`. Nothing leaked.
 
-This boundary is real and it is stronger than Claude's (§6). But it is the boundary of
-the **`--sandbox workspace-write` session workspace**, which every agent in the session
+This boundary is real, but it is the boundary of the **`--sandbox
+workspace-write` session workspace**, which every agent in the session
 shares. It separates the session from the rest of the disk. It does not separate agents
 from each other, which is the only thing the `native` tier needs.
 
@@ -167,17 +172,23 @@ C:\tmp\codex-g1-lab\wt1\.codex\agents\probe.toml must define `developer_instruct
 Required keys, as enforced by 0.147.0: **`name`**, **`description`**,
 **`developer_instructions`**.
 
-**OBSERVED.** With a valid `.codex/agents/probe.toml` present, the role appears as a
-`spawn_agent` `agent_type`. The root agent reported its allowed values as:
+**OBSERVED in the 0.147.0 tool schema.** With a valid
+`.codex/agents/probe.toml` present, the role appeared as a selectable custom
+agent. The root agent reported these allowed values:
 
 ```
 `probe`, `default`, `explorer`, `worker`
 ```
 
-A subagent spawned with `agent_type: "probe"` started successfully and was tagged
+A subagent spawned with the then-current selector started successfully and was tagged
 `agent_role: probe` in its session metadata — **and its `cwd` was still
 `C:\tmp\codex-g1-lab\wt1`**, identical to the root's. A named role changes the
 persona; it does not change the filesystem.
+
+The current public documentation does not specify a `subagent_type` or
+`agent_type` request field. It identifies a custom agent by the TOML `name`;
+runtime instructions should therefore request the registered agent by name and
+use the native spawn interface exposed by the active Codex client.
 
 ### 3.6 Concurrency default
 
@@ -219,7 +230,7 @@ slot count the orchestrator is actually given, not assume it equals the config k
 
 ## 4. Verdict
 
-**The `native` tier does not exist on Codex.**
+**Host-provided per-agent worktree isolation did not exist on this Codex build.**
 
 The `native` tier is defined in `02-target-architecture.md` §3 as *"the host offers
 worker isolation — per-worker worktree with an enforced main-checkout boundary."*
@@ -265,7 +276,10 @@ The Codex contract must preserve these conclusions:
 - Writes outside the session workspace were refused on both the shell path and the tool path.
 - The shipped prompt states the shared-directory behaviour verbatim.
 - Default concurrency: 4 slots including the root.
-- `.codex/agents/*.toml` is discovered, requires `name` / `description` / `developer_instructions`, and surfaces as a `spawn_agent` `agent_type`; a role-typed subagent still shares the cwd.
+- `.codex/agents/*.toml` is discovered and requires `name` / `description` /
+  `developer_instructions`; a custom subagent still shares the cwd. The
+  selector spelling observed in the old tool schema is not a current runtime
+  contract.
 
 **Inferred** (reasoning, not measurement):
 - That the unset default of `agents.max_concurrent_threads_per_session` is `3` — derived from the +1 relationship in §3.6, not read from a default value.
@@ -275,33 +289,7 @@ The Codex contract must preserve these conclusions:
 
 ---
 
-## 6. Comparison with the Claude side
-
-Measured on Claude Code in the same taskflow (finding **F-8**):
-
-| | Claude Code (`isolation: worktree`) | Codex 0.147.0 (`spawn_agent`) |
-|---|---|---|
-| Worktree per worker | **Yes**, host-created | **No**, one shared tree |
-| Isolation root | The *primary* checkout | The session workspace (shared by all agents) |
-| Tool-path write outside (`Write`/`Edit` vs `apply_patch`) | Blocked | Blocked |
-| Shell-path write outside (`printf x > …`) | **Not blocked** — the guard is git-aware, not filesystem-aware | **Blocked** — OS-level `Access … is denied` |
-| Guard is between workers | Yes | **No** |
-
-The two hosts fail in opposite directions, and neither is strictly safer:
-
-- Claude isolates **workers from each other** but leaks on the **shell path** out of the
-  worktree. Its guard understands git and not the filesystem.
-- Codex holds the **filesystem** boundary on both paths — genuinely tighter than Claude
-  at the session edge — but has **no boundary between workers at all**, which is exactly
-  the boundary the `native` tier is defined by.
-
-That asymmetry is the finding. It is why the CLI substrate is optional on one host and
-mandatory on the other, and why the Codex contract cannot be a mechanical copy of the
-Claude one.
-
----
-
-## 7. Reproducing this
+## 6. Reproducing this
 
 Re-run before trusting this note against a newer Codex build. Roughly ten minutes.
 
@@ -338,7 +326,7 @@ reports.
 
 ---
 
-## 8. Caveats
+## 7. Caveats
 
 - One build (`0.147.0`), one platform (Windows), one sandbox mode (`workspace-write`),
   one depth (1). The behaviour is **undocumented** and can change without a version
@@ -346,4 +334,4 @@ reports.
 - The shared-directory behaviour is stated in Codex's own shipped prompt, which makes it
   deliberate on this build — but a shipped prompt is not a stability guarantee either.
 - If a future Codex build does supply per-agent worktrees, the verdict in §4 must be
-  re-derived from a fresh run of §7, not amended from this text.
+  re-derived from a fresh run of §6, not amended from this text.

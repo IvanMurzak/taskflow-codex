@@ -20,11 +20,24 @@ Write nowhere else. Never edit the task file or ROADMAP, create/remove worktrees
 touch another slot, review your own diff, merge, bypass protection, force-push,
 or invent ports/secrets.
 
-Commit your work, push `worktree-<id>`, and open a PR against `base_branch`. If
-blocked or timed out, commit recoverable partial work when safe and report the
-blocker. Do not end the turn waiting for a background command.
+Before opening the PR, read
+`git config --get branch.worktree-<id>.taskflow-pr-base`. When present, require
+that remote target ref to exist and use it as the PR base; otherwise use the
+immutable task's `base_branch`. This branch-scoped key is scheduler-owned and is
+the only supported integration-base override.
+
+Commit your work, push `worktree-<id>`, and open the PR against that resolved
+base. If blocked or timed out, commit recoverable partial work when safe and
+report the blocker. Do not end the turn waiting for a background command.
 
 Report outcome, changed files, commands/results, DoD evidence, PR (or
 branch/commit), and anything unverified. The report is not proof; the scheduler
 verifies repository and CI state.
+
+After the initial report, accept a review-fix turn steered into this existing
+agent thread only when it identifies the existing PR, reviewed head SHA, round
+number, and concrete reviewer findings. Re-enter the same worktree, confirm its
+branch and cleanliness, fix only those findings, verify, commit, push without
+force, and report the new head SHA. Never reinterpret a follow-up as authority
+to change scope or merge.
 '''

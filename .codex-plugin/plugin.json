@@ -1,6 +1,6 @@
 {
   "name": "taskflow",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A four-skill Taskflow lifecycle for architecture planning, adversarial verification, immutable task specifications, and ROADMAP-driven execution.",
   "author": {
     "name": "IvanMurzak"
@@ -27,7 +27,7 @@
     "capabilities": ["Interactive", "Write"],
     "websiteURL": "https://github.com/IvanMurzak/taskflow-codex",
     "defaultPrompt": [
-      "Use taskflow-plan to plan this architectural change.",
+      "Use $taskflow:taskflow-plan to plan this architectural change.",
       "Review the selected Taskflow artifacts for evidence and consistency.",
       "Prepare immutable tasks and execution waves for this Taskflow."
     ],

@@ -34,7 +34,18 @@ fully supported. Use a submodule path only when the task changes that submodule.
 
 Populate ROADMAP waves and rows using:
 
-`| Task (spec) | needs | repo/base | imp/cx | model | Status | Run / PR | Updated |`
+`| id | Task (spec) | group | seq | needs | repo | base_branch | imp/cx | model | Status | Run / PR | Updated |`
+
+Copy `id`, `group`, `sequence`, `repo`, and `base_branch` into their distinct
+columns (with `sequence` rendered as `seq`).
+The scheduler must be able to compute readiness without loading immutable task
+bodies. For older boards lacking these columns, execution may parse only task
+frontmatter mechanically.
+
+Keep this empty integration-landings table after the task board; execution owns
+and populates it only when integration is active:
+
+`| repo | base_branch | integration_ref | Final PR | Status | Updated |`
 
 Rules: one group is one conflict domain; run it by ascending `sequence`;
 independent groups may overlap when dependencies allow. Complexity 1–4 maps to

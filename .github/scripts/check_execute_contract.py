@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
 """Check stable taskflow-execute invariants without pinning prose layout.
 
-This file is BYTE-IDENTICAL in taskflow-claude, taskflow-codex and
-taskflow-gemini. The invariants themselves are data, in the sibling
-`contract.json`, because a few of them are legitimately harness-specific: on
-Claude Code `native` isolation is the agent's own `isolation: worktree`, not a
-hand-created git worktree, so asserting that phrase there would make CI enforce
-something false. Keeping the code identical and the phrases in data means a
-real difference is visible in a diff instead of hidden in three copies of a
-script that have quietly drifted apart.
+The invariants are data in the sibling `contract.json`, so Codex-specific
+requirements stay explicit without pinning this checker's control flow to a
+particular prose layout.
 
 `contract.json` shape:
 

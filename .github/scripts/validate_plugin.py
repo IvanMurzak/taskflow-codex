@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import tomllib
 from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlparse
@@ -23,6 +24,10 @@ SEMVER_RE = re.compile(
     r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
 )
 HEX_COLOR_RE = re.compile(r"^#[0-9A-F]{6}$", re.IGNORECASE)
+FORBIDDEN_CODEX_INSTRUCTION_PHRASES = {
+    "Claude Code agent selector": "subagent_type",
+    "external Claude Code runner": "claude -p",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -52,6 +57,7 @@ def validate_plugin(plugin_root: Path) -> list[str]:
 
     reject_todo_markers(manifest, "$", errors)
     validate_manifest_shape(plugin_root, manifest, errors)
+    validate_codex_instruction_surfaces(plugin_root, errors)
     return errors
 
 
@@ -128,6 +134,7 @@ def validate_manifest_shape(
     validate_optional_contract_path(manifest, "skills", "skills", errors)
     validate_optional_contract_path(manifest, "apps", ".app.json", errors)
     validate_manifest_mcp_servers(plugin_root, manifest, errors)
+    validate_agent_manifests(plugin_root, manifest, errors)
 
     if manifest.get("apps") is not None:
         validate_app_manifest(
@@ -315,6 +322,71 @@ def normalize_contract_path(raw_path: str) -> str | None:
         return None
     normalized = path.as_posix().rstrip("/")
     return normalized or None
+
+
+def validate_agent_manifests(
+    plugin_root: Path,
+    manifest: dict[str, Any],
+    errors: list[str],
+) -> None:
+    entries = manifest.get("agents")
+    if entries is None:
+        return
+    if not isinstance(entries, list) or not entries:
+        errors.append("plugin.json field `agents` must be a non-empty array")
+        return
+
+    seen_names: set[str] = set()
+    for index, raw_path in enumerate(entries):
+        field = f"plugin.json field `agents[{index}]`"
+        if not isinstance(raw_path, str) or not raw_path.strip():
+            errors.append(f"{field} must be a non-empty relative path")
+            continue
+        candidate = PurePosixPath(raw_path.replace("\\", "/"))
+        if candidate.is_absolute() or any(
+            part in {"", ".", ".."} for part in candidate.parts
+        ):
+            errors.append(f"{field} must stay inside the plugin archive")
+            continue
+        path = (plugin_root / candidate.as_posix()).resolve()
+        if not path.is_relative_to(plugin_root.resolve()):
+            errors.append(f"{field} must stay inside the plugin archive")
+            continue
+        if path.suffix != ".toml" or not path.is_file():
+            errors.append(f"{field} must point to an existing TOML file")
+            continue
+        try:
+            payload = tomllib.loads(path.read_text(encoding="utf-8"))
+        except (OSError, tomllib.TOMLDecodeError):
+            errors.append(f"{field} must contain valid TOML")
+            continue
+        for key in ("name", "description", "developer_instructions"):
+            value = payload.get(key)
+            if not isinstance(value, str) or not value.strip():
+                errors.append(f"{field} must define a non-empty `{key}`")
+        name = payload.get("name")
+        if isinstance(name, str) and name.strip():
+            if name in seen_names:
+                errors.append(f"duplicate agent name `{name}`")
+            seen_names.add(name)
+
+
+def validate_codex_instruction_surfaces(
+    plugin_root: Path,
+    errors: list[str],
+) -> None:
+    paths = sorted((plugin_root / "skills").glob("**/*.md"))
+    paths.extend(sorted((plugin_root / "agents").glob("*.toml")))
+    for path in paths:
+        try:
+            lowered = path.read_text(encoding="utf-8").casefold()
+        except OSError:
+            errors.append(f"unable to read Codex instruction surface `{path}`")
+            continue
+        for label, phrase in FORBIDDEN_CODEX_INSTRUCTION_PHRASES.items():
+            if phrase.casefold() in lowered:
+                relative = path.relative_to(plugin_root)
+                errors.append(f"{relative} contains forbidden {label}: `{phrase}`")
 
 
 def validate_app_manifest(path: Path, errors: list[str]) -> None:
