@@ -29,6 +29,29 @@ Restart Codex and the four skills are there.
 > hence the `@pipeline` suffix. The plugin you just installed is `taskflow`;
 > `pipeline` is the other one.
 
+### Upgrade
+
+Publishing a new `taskflow-codex` release does not automatically change the
+version installed from the marketplace. The separate
+[`pipeline-codex-marketplace`](https://github.com/IvanMurzak/pipeline-codex-marketplace)
+repository must first point the `taskflow` entry in
+`.agents/plugins/marketplace.json` at the new release tag. Commit and push that
+change, then wait for its **Validate marketplace** workflow to pass.
+
+After the marketplace update is green, refresh its local snapshot and
+reinstall:
+
+```powershell
+codex plugin marketplace upgrade pipeline
+codex plugin remove taskflow@pipeline
+codex plugin add taskflow@pipeline
+```
+
+The final command prints the installed plugin root; its last path component
+should be the new version. Restart Codex so a new session loads it. On Windows,
+close running Codex sessions before upgrading if the command reports that the
+marketplace directory is being used by another process (`os error 32`).
+
 ### Optional execution toolkit
 
 ```bash
