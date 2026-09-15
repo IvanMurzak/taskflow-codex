@@ -47,7 +47,7 @@ ROADMAP's `model` column is an execution hint. Resolve `fast` to `gpt-5.6-luna`
 with low effort, `mid` to `gpt-5.6-terra` with medium effort, and `top` to `gpt-5.6-sol`
 with high effort. Pass the resolved model and reasoning
 effort as explicit spawn values when the current Codex spawn interface supports
-them. The bundled custom-agent TOMLs intentionally do not pin a model, so the
+them. The bundled role briefs do not pin a model, so the
 task choice can apply. If a named model or effort is unavailable, inherit the
 parent values and record once that the hint was not applied; never invent an
 unavailable model id.
@@ -96,8 +96,8 @@ See `references/parallel-execution.md` for lifecycle commands and constraints.
 
 With `--engine=pipeline`, require the Codex Pipeline plugin and the explicit
 `--pipeline=<name>`. Invoke `$pipeline:run ./.pipeline/<name>` in the current Codex session
-and require `manager` mode. In manager mode, the Pipeline skill spawns the
-registered custom agent whose `name` is `pipeline-manager`. Never shell out to
+and require `manager` mode. In manager mode, the Pipeline skill spawns a fresh
+subagent that reads its bundled `pipeline-manager` role brief. Never shell out to
 another model or agent CLI and never launch a process-based driver. If the
 pipeline explicitly declares another runner, stop before dispatch.
 
@@ -105,7 +105,7 @@ The named pipeline owns task isolation, implementation, review, PR, CI, merge,
 integration, and cleanup. Do not also provision a Taskflow worktree or spawn a
 `taskflow-implementer` for the same row. Supply the immutable task-file path
 through the named pipeline's documented task-input contract. If the Pipeline
-skill, requested runner, registered manager role, or task-input contract is not
+skill, requested runner, manager role brief, or task-input contract is not
 available, stop before dispatch rather than changing execution hosts or modes.
 
 ## Dispatch contract
@@ -115,15 +115,23 @@ For each selected row outside the `pipeline` engine:
 1. Provision `worktree-<task-id>` from its declared base.
 2. Mark all selected rows `🔵` and commit the ROADMAP once for the batch.
 3. Spawn all implementers before waiting for any of them. Call Codex's native
-   `spawn_agent`, request the registered custom agent whose `name` is
-   `taskflow-implementer`, and use `fork_turns: "none"`. If Codex cannot resolve
-   that custom-agent name, stop before dispatch; never replace it with a generic
-   agent, an inlined brief, or an external agent host. Subagents inherit the
-   parent sandbox and live permission overrides; do not weaken them.
-4. The spawn message must contain **exactly one value: the absolute path to the
-   immutable task file**. Do not paste, summarize, or pre-read its body; do not
-   include the board, sibling tasks, worktree path, or merge permission. The
-   worker reads the file and locates its prepared worktree by task id.
+   `spawn_agent` with `fork_turns: "none"` and a task name such as
+   `taskflow_implementer_<id_sanitized>`. Resolve
+   `references/roles/taskflow-implementer.md` relative to this installed skill
+   file and pass its absolute path in the spawn message. Do not request a plugin
+   agent type: the plugin installs skills, not custom agents. Subagents inherit
+   the parent sandbox and live permission overrides; do not weaken them.
+4. The spawn message has exactly two lines:
+
+   ```text
+   Read and follow role_file first: <absolute implementer role path>
+   task_file: <absolute immutable task path>
+   ```
+
+   The worker reads the role brief first, then the task file. Never load the
+   task body into scheduler context; do not paste, summarize, or pre-read its
+   body, and do not include the board, sibling tasks, worktree path, or merge
+   permission. The worker locates its prepared worktree by task id.
 5. Wait for every worker in the batch with Codex's blocking `wait_agent`
    mechanism and a long timeout. Do not implement a repeated shell-sleep or
    short polling loop. A round does not end until each outcome is verified and

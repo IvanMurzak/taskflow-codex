@@ -8,12 +8,12 @@ task repository; `repo: "."` means create the worktree from that repository.
 
 Select at most `min(--parallel, available worker slots, ready conflict groups)`.
 Issue every `spawn_agent` call before the first wait. Use
-`fork_turns: "none"`; each message is only the absolute task-file path. A worker
+`fork_turns: "none"`; each message carries only the absolute role-brief path
+and absolute task-file path in the two-line format from `SKILL.md`. A worker
 finds its slot by `worktree-<task-id>` in the repository named by the spec.
-Request the registered custom agent by its `name`, `taskflow-implementer`. If
-Codex cannot resolve that name, stop before dispatch. Keep the inherited sandbox
-and permission policy; a custom-agent file is not authority to weaken live
-runtime restrictions.
+Resolve the role brief relative to the installed `SKILL.md` path. Keep the
+inherited sandbox and permission policy; a role brief is not authority to
+weaken live runtime restrictions.
 
 After dispatch, wait with `wait_agent` using a long timeout. Do not alternate
 short sleeps with status polls. If a bounded wait expires, take one status

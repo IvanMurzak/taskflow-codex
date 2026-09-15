@@ -310,10 +310,11 @@ isolation.
 
 ### Codex-native dispatch is mandatory
 
-Taskflow dispatches registered custom agents by their TOML `name` through
-Codex's native `spawn_agent`. If Codex cannot resolve the requested name,
-execution stops before dispatch; it never shells out to another model CLI or
-silently changes runner modes. Spawned agents retain the parent session's live
+Taskflow uses Codex's native `spawn_agent` to start a fresh implementer or
+reviewer thread. The plugin bundles their instructions as role briefs under
+`skills/taskflow-execute/references/roles/`; the spawn message gives the child
+the absolute brief path and task path. The plugin does not register custom
+agents through its manifest. Spawned agents retain the parent session's live
 sandbox and permission overrides.
 
 For `--engine=pipeline`, Taskflow invokes the installed Pipeline skill in the
@@ -395,7 +396,7 @@ skills/taskflow-plan/             ┐
 skills/taskflow-review/           │ the four public skills
 skills/taskflow-tasks/            │
 skills/taskflow-execute/          ┘ + references/ loaded only when a flag asks
-agents/                           the two custom agent definitions bundled by the manifest
+skills/taskflow-execute/references/roles/  implementer and reviewer briefs
 docs/taskflow-codex.svg           the animation at the top of this file
 docs/2026-08-09-codex-subagent-isolation.md
 ```

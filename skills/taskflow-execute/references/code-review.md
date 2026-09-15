@@ -3,13 +3,16 @@
 Load only when `--review` is not `off`. The reviewer must be a different agent
 from the implementer and must inspect the actual diff.
 
-Use Codex's native `spawn_agent` and request the registered custom agent whose
-`name` is `taskflow-reviewer`. Do not fall back to a generic or external agent
-when Codex cannot resolve that name.
+Use Codex's native `spawn_agent` with `fork_turns: "none"` and task name
+`taskflow_reviewer_<id_sanitized>`. Resolve `roles/taskflow-reviewer.md`
+relative to this reference file; the child reads that bundled role brief
+first. Do not use an
+external agent host.
 
 The initial reviewer prompt contains only these fields:
 
 ```text
+Read and follow role_file first: <absolute path to roles/taskflow-reviewer.md>
 task_file: <absolute immutable task path>
 depth: <low|medium|high|xhigh>
 repository: <absolute task repository path>
