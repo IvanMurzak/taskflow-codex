@@ -1,0 +1,41 @@
+README.md
+  s_50329d799ae552::t_77af424a4f67e1 313-317,399
+skills/taskflow-execute/references/roles/taskflow-reviewer.md
+  s_50329d799ae552::t_1e79776cf20c51 1-4,10-24
+  s_50329d799ae552::t_042c6c7835b63d 5-9
+skills/taskflow-execute/references/parallel-execution.md
+  s_50329d799ae552::t_383ad96edfa3b7 11-12,14-16
+.codex-plugin/plugin.json
+  s_50329d799ae552::t_00e47d8f12f218 3
+skills/taskflow-execute/SKILL.md
+  s_50329d799ae552::t_bbe82c402a38c1 50,99-100,108,118-123
+  s_50329d799ae552::t_c50ec816258a19 124-134
+skills/taskflow-execute/references/roles/taskflow-implementer.md
+  s_50329d799ae552::t_813e396fa6e5d7 7-15
+  s_50329d799ae552::t_1e79776cf20c51 1-6,16-48
+.github/scripts/contract.json
+  s_50329d799ae552::t_5e15424f200472 5
+  s_50329d799ae552::t_586d3eb7c0822e 21
+skills/taskflow-execute/references/code-review.md
+  s_50329d799ae552::t_bbe82c402a38c1 6,10
+  s_50329d799ae552::t_5e15424f200472 15
+  s_50329d799ae552::t_e5e02e0e5e91c8 7-9
+.github/scripts/validate_plugin.py
+  s_50329d799ae552::t_71fd5405aefc91 29,136-138,328-339
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d7b61f33a5f624aa84878789bce28cdd802fdc46",
+  "prompts": {},
+  "sessions": {
+    "s_50329d799ae552": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0a49f-1a55-7041-a4ba-349972939306",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
